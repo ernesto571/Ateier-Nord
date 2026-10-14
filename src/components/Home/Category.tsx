@@ -8,7 +8,7 @@ export default function Category (){
     ]
 
     return(
-        <main className="px-14 py-14">
+        <main className="sect-main">
             <h2 className="text-2xl font-semibold">Find Your Kind Of Thing</h2>
 
             <div className="grid grid-cols-4 mt-9 gap-6">
