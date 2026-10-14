@@ -65,7 +65,7 @@ export default function Hero () {
                 </div>
             </section>
 
-            <section className="py-3 border-default" >
+            <section className="py-3 border-b border-[#E5E5E5] " >
                 <span className="w-full flex gap-14 uppercase justify-center  tracking-wider">
                     <h3>One store, more to explore</h3>
                     <p>Apparel</p>
