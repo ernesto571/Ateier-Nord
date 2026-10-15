@@ -52,6 +52,21 @@ export default function Hero () {
                         )) }
                     </span>
                 </section>
+
+                <div className="order-1 lg:order-2 relative min-w-0 mt-7">
+                    <div className="grid grid-cols-[1.15fr_.85fr] gap-3 md:gap-4 items-end">
+                        <div className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-neutral-100 aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&amp;q=85" className="w-full h-full object-cover kb" alt="Wireless headphones from the tech collection" />
+                        <div className="absolute bottom-4 left-4 text-white text-xs uppercase tracking-[.2em] drop-shadow">The tech edit</div>
+                        </div>
+                        <div className="flex flex-col gap-3 md:gap-4 pb-8 md:pb-12">
+                        <div className="rounded-2xl md:rounded-3xl overflow-hidden bg-neutral-100 aspect-[4/5]"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&amp;q=85" className="w-full h-full object-cover" alt="Everyday wristwatch" /></div>
+                        <div className="rounded-2xl md:rounded-3xl overflow-hidden bg-neutral-100 aspect-square"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&amp;q=85" className="w-full h-full object-cover" alt="Everyday carry backpack" /></div>
+                        </div>
+                    </div>
+                    <button  className="absolute left-2 md:left-5 bottom-2 md:bottom-5 max-w-[calc(100%-1rem)] bg-white border border-neutral-200 rounded-xl md:rounded-2xl p-2.5 md:p-3 pr-4 shadow-md flex gap-3 items-center text-left hover:-translate-y-1 transition-transform"><span className="w-10 h-10 md:w-12 md:h-12 rounded-lg overflow-hidden shrink-0"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=160&amp;q=80" className="w-full h-full object-cover" alt="" /></span><span className="text-xs"><b className="block text-sm">Studio Wireless Headphones</b><span className="text-neutral-500">Sound, without the fuss</span><span className="block mt-1">$179.00 <span className="ml-2">↗</span></span></span></button>
+                    <div className="absolute right-0 top-0 md:top-4 bg-white border border-neutral-200 rounded-full px-3 py-2 text-[10px] md:text-xs tracking-wide shadow-sm">GOOD THINGS, ALL IN ONE PLACE</div>
+                </div>
             </main>
             {/* slide */}
             <section className="py-3 overflow-hidden bg-black border-y-2 ">

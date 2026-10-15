@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import type React from "react";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/Homepage";
+import AllProducts from "./pages/Category/AllProducts";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -36,6 +37,7 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} /> */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/all" element={<AllProducts />} />
 
       </Routes>
       <Toaster
