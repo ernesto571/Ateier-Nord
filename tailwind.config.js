@@ -8,11 +8,7 @@ export default {
     extend: {
       screens: {
         md: "700px",
-      },
-      fontFamily: {
-        jet: ['JetBrains Mono', 'sans-serif'],
-        dm: ['DM Sans', 'sans-serif'],
-      },
+      }
     },
   },
   plugins: [],

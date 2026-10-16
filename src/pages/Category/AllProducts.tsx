@@ -21,7 +21,7 @@ export default function AllProducts () {
                 </section>
 
                 <section className="col-span-3 h-screen overflow-y-auto">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-5">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8">
                         <div>
                             <p className="text-[10px] uppercase tracking-[.2em] text-neutral-500 mb-2">Curated essentials</p>
                             <h2 id="lt" className="text-2xl md:text-3xl font-semibold tracking-tight">All Products ({allProducts.length})</h2>
@@ -43,6 +43,7 @@ export default function AllProducts () {
                 </section>
 
             </div>
+
             <Footer />
         </main>
     )

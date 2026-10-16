@@ -21,11 +21,11 @@ export default function Hero () {
 
     return (
         <div>
-            <main className="min-h-screen py-14 grid grid-cols-2 items-center px-14 bg-white">
+            <main className="lg:min-h-screen py-14 grid  grid-cols-1 lg:grid-cols-2 items-center px-5 md:px-14 bg-white">
                 <section>
-                    <div className="flex gap-3 mt-14 items-center pb-3">
+                    <div className="flex gap-3 mt-7 md:mt-14 items-center pb-3">
                     <span className="w-8 h-px bg-neutral-950"></span>
-                    <p className="text-xs uppercase tracking-[.24em] text-neutral-500">ATELIER NORD / THE EVERYDAY EDIT</p>
+                    <p className="text-xs uppercase tracking-wide md:tracking-[.24em] text-neutral-500">ATELIER NORD / THE EVERYDAY EDIT</p>
                     </div>
                     <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-semibold leading-[.9] tracking-[-.06em] flex flex-col">
                         <span >Good finds.</span>
@@ -34,26 +34,26 @@ export default function Hero () {
                     </h1>
                     <p className=" mt-7 gray max-w-md leading-7">From style and accessories to tech and everyday essentials, discover useful things, fresh finds, and little upgrades for life. One easy place to find your next favorite.</p>
 
-                    <span className=" flex gap-6 items-center mt-7">
-                        <button className="btn hover:bg-[#262626] transition duration-200 ease-in-out ">
+                    <span className=" flex gap-3 md:gap-6 items-center mt-7">
+                        <button className="btn text-nowrap hover:bg-[#262626] transition duration-200 ease-in-out ">
                             Explore the store 
                             <span className="ml-3">↗</span>
                         </button>
 
-                        <a href="#" className="text-sm underline underline-offset-4 decoration-neutral-400">Browse all categories</a>
+                        <a href="#" className="text-sm  text-nowrap underline underline-offset-4 decoration-neutral-400">Browse all categories</a>
                     </span>
 
                     <span className="flex gap-9 mt-7">
                         { info.map((i) => (
                             <div  className="flex flex-col " key={i.label}>
-                                <h3 className="text-2xl font-bold">{i.value} </h3>
-                                <p className="gray-muted text-sm">{i.label} </p>
+                                <h3 className="md:text-2xl font-bold">{i.value} </h3>
+                                <p className="gray-muted text-xs md:text-sm">{i.label} </p>
                             </div>
                         )) }
                     </span>
                 </section>
 
-                <div className="order-1 lg:order-2 relative min-w-0 mt-7">
+                <div className="hidden lg:flex order-1 lg:order-2 relative min-w-0 mt-7">
                     <div className="grid grid-cols-[1.15fr_.85fr] gap-3 md:gap-4 items-end">
                         <div className="relative rounded-2xl md:rounded-3xl overflow-hidden bg-neutral-100 aspect-[4/5]">
                         <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1000&amp;q=85" className="w-full h-full object-cover kb" alt="Wireless headphones from the tech collection" />
@@ -80,8 +80,8 @@ export default function Hero () {
                 </div>
             </section>
 
-            <section className="py-3 border-b border-[#E5E5E5] " >
-                <span className="w-full flex gap-14 uppercase justify-center  tracking-wider">
+            <section className="hidden lg:flex py-3 border-b border-[#E5E5E5] " >
+                <span className="w-full text-base flex gap-3 md:gap-14 uppercase justify-center  tracking-wider">
                     <h3>One store, more to explore</h3>
                     <p>Apparel</p>
                     <p>Footwear</p>

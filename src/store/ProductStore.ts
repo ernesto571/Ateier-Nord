@@ -9,7 +9,7 @@ interface Product {
   description: string;
   price: number;
   category: string;
-  subcategory: string;
+  subcat: string;
   images: string[];
   colors: string[];
   sizes: string[];

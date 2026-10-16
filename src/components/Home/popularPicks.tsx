@@ -11,15 +11,15 @@ export default function PopularPicks () {
         <main className="sect-main">
             <h2 className="text-2xl font-semibold">Popular Picks</h2>
 
-            <div className="grid grid-cols-4 mt-7 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 mt-7 gap-3 md:gap-6">
                 { products.map((p) => (
-                    <div key={p.id} className="relative rounded-xl border p-2.5 group hover:shadow-md">
-                        <div className="absolute inset-0 z-10 -left-2 -top-3 flex items-center text-center justify-center bg-black rounded-full w-[35px] h-[35px] text-white text-sm font-semibold">{p.id} </div>
+                    <div key={p.id} className="relative rounded-xl border p-1.5 md:p-2.5 group hover:shadow-md">
+                        <div className="absolute inset-0 z-10 -left-2 -top-3 flex items-center text-center justify-center bg-black rounded-full w-[25px] h-[25px] md:w-[35px] md:h-[35px] text-white text-xs md:text-sm font-semibold">{p.id} </div>
                         <div className="relative group hover:cursor-pointer">
                             <button className="absolute z-10 top-3 right-2 bg-white p-2 rounded-full">
                                 <Heart className="size-4 text-black"/>
                             </button>
-                            <div className="relative  overflow-hidden rounded-lg h-[250px] ">
+                            <div className="relative  overflow-hidden rounded-lg h-[180px] md:h-[200px] lg:h-[250px] ">
                                 <img
                                     src={p.image}
                                     alt={p.name}
@@ -33,12 +33,12 @@ export default function PopularPicks () {
                         </div>
                         
 
-                        <div className="relative flex flex-col gap-2 py-2 px-1">
-                            <span className="flex justify-between font-semibold text-[0.9rem] text-black">
-                                <h3 >{p.name}</h3>
+                        <div className="relative flex flex-col gap-1 md:gap-2 py-2 px-1">
+                            <span className="flex flex-col md:flex-row gap-1 justify-between font-semibold text-[0.9rem] text-black">
+                                <h3 className="truncate">{p.name}</h3>
                                 <h3>${p.price} </h3>
                             </span>
-                            <span className="flex justify-between items-center ">
+                            <span className="flex flex-col gap-1 md:flex-row justify-between md:items-center ">
                                 <p className="text-xs font-semibold">★ {p.rating} </p>
                                 <button className="bg-black text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
                             </span>

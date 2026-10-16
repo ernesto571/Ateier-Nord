@@ -4,6 +4,7 @@ import type React from "react";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/Homepage";
 import AllProducts from "./pages/Category/AllProducts";
+import Apparel from "./pages/Category/Apparel";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -38,6 +39,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} /> */}
         <Route path="/" element={<HomePage />} />
         <Route path="/all" element={<AllProducts />} />
+        <Route path="/apparel" element={<Apparel />} />
 
       </Routes>
       <Toaster

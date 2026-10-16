@@ -30,7 +30,7 @@ export default function  Sidebar () {
 
                             const Icon = c.icon
                             return (
-                                <NavLink to={c.to} key={c.to} className= {({ isActive }) => `flex justify-between items-center  px-4 py-3 text-sm  ${isActive ? "text-white bg-black rounded-xl" : "text-black"} `}>
+                                <NavLink to={c.to} key={c.to} className= {({ isActive }) => `flex justify-between items-center px-4 py-3 text-sm  ${isActive ? "text-white bg-black rounded-xl" : "text-black"} `}>
                                     <span className="flex gap-2.5 items-center">
                                         <Icon className="w-5 h-4 shrink-0" />
                                         <span >{c.label} </span>

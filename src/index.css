@@ -80,7 +80,7 @@ p {
 }
 
 .sect-main {
-  padding:3.5rem /* 56px */;
+  padding:40px 14px;
 }
 
 .inp {
@@ -131,4 +131,10 @@ p {
   grid-column: span 1;
   position: sticky;
   top: 0;
+}
+
+@media (min-width: 700px) {
+  .sect-main{
+    padding: 56px;
+  }
 }

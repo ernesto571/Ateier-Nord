@@ -9,12 +9,12 @@ export default function Category (){
 
     return(
         <main className="sect-main">
-            <h2 className="text-2xl font-semibold">Find Your Kind Of Thing</h2>
+            <h2 className="text-xl md:text-2xl font-semibold">Find Your Kind Of Thing</h2>
 
-            <div className="grid grid-cols-4 mt-9 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 mt-9 gap-3 md:gap-6">
                 { cat.map((c) => (
                     <button key={c.label} className="relative rounded-xl border p-2 group group-hover:cursor-pointer">
-                        <div className="relative group overflow-hidden rounded-lg h-[250px] ">
+                        <div className="relative group overflow-hidden rounded-lg h-[150px] md:h-[200px] lg:h-[250px] ">
                             <img
                                 src={c.img}
                                 alt={c.label}
@@ -22,7 +22,7 @@ export default function Category (){
                             />
                         </div>
 
-                        <h3 className="absolute bg-white px-2 py-1.5 text-sm bottom-5 left-5 rounded-lg ">{c.label} </h3>
+                        <h3 className="absolute bg-white px-2 py-1.5 text-xs md:text-sm bottom-5 left-5 rounded-lg ">{c.label} </h3>
                     </button>
                 )) }
             </div>

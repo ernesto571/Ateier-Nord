@@ -3,8 +3,8 @@ export default function Story () {
 
     return (
         <main className="sect-main border-default bg-[#fafafa] ">
-            <div className="grid grid-cols-2 gap-10 items-center">
-                <div className="h-[400px] border-default p-2 rounded-3xl bg-white">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10 items-center">
+                <div className="h-[250px] md:h-[300px] lg:h-[400px] border-default p-2 rounded-3xl bg-white">
                     <img className="h-full w-full object-cover rounded-2xl" src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1000&q=80" alt="story-img" loading="lazy" />
                 </div>
 
