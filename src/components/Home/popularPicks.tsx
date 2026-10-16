@@ -38,9 +38,9 @@ export default function PopularPicks () {
                                 <h3 className="truncate">{p.name}</h3>
                                 <h3>${p.price} </h3>
                             </span>
-                            <span className="flex flex-col gap-1 md:flex-row justify-between md:items-center ">
+                            <span className="flex flex-col gap-2 md:flex-row justify-between md:items-center ">
                                 <p className="text-xs font-semibold">★ {p.rating} </p>
-                                <button className="bg-black text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
+                                <button className="bg-black text-xs lg:text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
                             </span>
                         </div>
                     </div>

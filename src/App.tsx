@@ -1,6 +1,5 @@
-import { Routes, Route, Navigate} from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import type React from "react";
+import { Routes, Route} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/Homepage";
 import AllProducts from "./pages/Category/AllProducts";

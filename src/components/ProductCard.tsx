@@ -16,12 +16,12 @@ interface ProductCardProps {
 export default function ( { product }: ProductCardProps ) {
 
     return(
-        <div  className="relative rounded-xl border p-2.5 group hover:shadow-md">
+        <div  className="relative rounded-xl border p-1.5 md:p-2.5 group hover:shadow-md">
             <div className="relative group hover:cursor-pointer">
                 <button className="absolute z-10 top-3 right-2 bg-white p-2 rounded-full">
                     <Heart className="size-4 text-black"/>
                 </button>
-                <div className="relative  overflow-hidden rounded-lg h-[200px] ">
+                <div className="relative  overflow-hidden rounded-lg h-[150px] md:h-[180px] lg:h-[200px] ">
                     <img
                         src={product.images[0]}
                         alt={product.name}
@@ -35,14 +35,14 @@ export default function ( { product }: ProductCardProps ) {
             </div>
             
 
-            <div className="relative flex flex-col gap-2 py-2 px-1">
-                <span className="flex justify-between font-medium text-[0.9rem] text-black">
-                    <h3 >{product.name}</h3>
+            <div className="relative flex flex-col gap-1 md:gap-2 py-2 px-1">
+                <span className="flex flex-col md:flex-row justify-between font-semibold gap-1 md:gap-3 text-sm md:text-[0.9rem] text-black">
+                    <h3 className="truncate">{product.name}</h3>
                     <h3>${product.price} </h3>
                 </span>
-                <span className="flex justify-between items-center ">
+                <span className="flex flex-col md:flex-row justify-between gap-2 md:items-center ">
                     <p className="text-xs font-semibold">★ {product.rating} </p>
-                    <button className="bg-black text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
+                    <button className="bg-black text-xs lg:text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
                 </span>
             </div>
         </div>
