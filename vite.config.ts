@@ -13,7 +13,6 @@ export default defineConfig(({ command }) => ({
   },
   build: {
     sourcemap: false,
-    minify: 'terser' as const,
   },
   plugins: [
     react(),
