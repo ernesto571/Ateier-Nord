@@ -32,7 +32,7 @@ export default function Apparel () {
 
     return (
         <main>
-            <div  className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-10 mt-10 md:mt-16"> 
+            <div  className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-y-6 md:gap-6 lg:gap-10 mt-10 md:mt-16"> 
 
                 <section className="sidebar">
                     <Sidebar />

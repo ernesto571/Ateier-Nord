@@ -102,7 +102,7 @@ export default function ProductDetails() {
 
             {/* product details */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
-                <section className="flex-col-reverse flex lg::flex-col gap-5" >
+                <section className="flex flex-col-reverse md:flex-row-reverse lg:flex-row gap-5" >
                     <div className="grid grid-cols-3 gap-6 md:flex flex-col md:gap-3">
                         { product.images.map((i) => (
                         <div key={i} className="h-[70px] lg:h-[120px] w-[100px] rounded-xl  border-2 p-0.5 transition border-neutral-950">
