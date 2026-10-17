@@ -1,4 +1,5 @@
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
     id: string;
@@ -15,9 +16,14 @@ interface ProductCardProps {
 
 export default function ( { product }: ProductCardProps ) {
 
+    const navigate = useNavigate()
+
+    const handleClick = ( productSlug: string ) => {
+        navigate(`/${productSlug}`);
+    };
     return(
-        <div  className="relative rounded-xl border p-1.5 md:p-2.5 group hover:shadow-md">
-            <div className="relative group hover:cursor-pointer">
+        <div className="relative rounded-xl border p-1.5 md:p-2.5 group hover:shadow-md">
+            <div onClick={() => handleClick(product.slug)} className="relative group hover:cursor-pointer">
                 <button className="absolute z-10 top-3 right-2 bg-white p-2 rounded-full">
                     <Heart className="size-4 text-black"/>
                 </button>
@@ -38,7 +44,7 @@ export default function ( { product }: ProductCardProps ) {
             <div className="relative flex flex-col gap-1 md:gap-2 py-2 px-1">
                 <span className="flex flex-col md:flex-row justify-between font-semibold gap-1 md:gap-3 text-sm md:text-[0.9rem] text-black">
                     <h3 className="truncate">{product.name}</h3>
-                    <h3>${product.price} </h3>
+                    <h3>${product.price.toFixed(2)} </h3>
                 </span>
                 <span className="flex flex-col md:flex-row justify-between gap-2 md:items-center ">
                     <p className="text-xs font-semibold">★ {product.rating} </p>

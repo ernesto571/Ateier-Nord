@@ -1,5 +1,8 @@
+import { NavLink, useNavigate } from "react-router-dom"
+
 export default function Hero () {
 
+    const navigate = useNavigate()
     const info = [
         {value:"4.9★", label:"Average Rating"},
         {value:"12k+", label:"Happy Customers"},
@@ -35,12 +38,12 @@ export default function Hero () {
                     <p className=" mt-7 gray max-w-md leading-7">From style and accessories to tech and everyday essentials, discover useful things, fresh finds, and little upgrades for life. One easy place to find your next favorite.</p>
 
                     <span className=" flex gap-3 md:gap-6 items-center mt-7">
-                        <button className="btn text-nowrap hover:bg-[#262626] transition duration-200 ease-in-out ">
+                        <button onClick={ () => {navigate("/all")}} className="btn text-nowrap hover:bg-[#262626] transition duration-200 ease-in-out ">
                             Explore the store 
                             <span className="ml-3">↗</span>
                         </button>
 
-                        <a href="#" className="text-sm  text-nowrap underline underline-offset-4 decoration-neutral-400">Browse all categories</a>
+                        <NavLink to="/apparel" className="text-sm  text-nowrap underline underline-offset-4 decoration-neutral-400">Browse all categories</NavLink>
                     </span>
 
                     <span className="flex gap-9 mt-7">

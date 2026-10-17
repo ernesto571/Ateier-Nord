@@ -6,7 +6,8 @@ interface Product {
   id: string;
   name: string;
   slug: string;
-  description: string;
+  short_description: string;
+  details: string;
   price: number;
   category: string;
   subcat: string;
@@ -21,14 +22,14 @@ interface Product {
 }
 
 interface ProductStore {
-  allProducts: Product[];
+  allProducts: Product[] | null;
   productsLoading: boolean;
   error: string | null;
   fetchAllProducts: () => Promise<void>;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
-  allProducts: [],
+  allProducts: null,
   productsLoading: false,
   error: null,
 
@@ -44,7 +45,7 @@ export const useProductStore = create<ProductStore>((set) => ({
         return;
       }
 
-      set({ allProducts: data ?? [] });
+      set({ allProducts: data });
     } catch (err: any) {
       console.error("🔴 fetchAllProducts : failed", err.message)
     } finally {
