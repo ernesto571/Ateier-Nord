@@ -15,9 +15,12 @@ export default function Cart ( {onClose} : props ) {
     useEffect(() => {
         fetchCartItems()
     }, [])
-
+    useEffect(() => {
+        document.body.style.overflow = "hidden"
+        return () => { document.body.style.overflow = "" }
+    }, [])
     return (
-        <div  onClick={onClose}  className="fixed inset-0 bg-black/40 z-50" >
+        <div  onClick={onClose}  className="fixed inset-0 bg-black/40 z-40" >
             <aside onClick={(e) => e.stopPropagation()} className="fixed top-0 right-0 h-full w-full max-w-sm bg-white z-50 transition-transform duration-300 flex flex-col border-l border-neutral-200">
                 <div className="p-4 border-b border-neutral-200 flex justify-between items-center"><h3 className="font-semibold">Shopping Cart</h3><button onClick={onClose}  aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="x" className="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></div>
 
