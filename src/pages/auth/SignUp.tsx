@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import Footer from "../../components/Home/Footer";
 import { useAuthStore } from "../../store/AuthStore";
@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 export default function SignUp ()  {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
-    const { formData, signUp, setFormData, isLoading, error } = useAuthStore()
+    const { formData, session, signUp, setFormData, fetchSession, isLoading, error } = useAuthStore()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ [e.target.name]: e.target.value });
@@ -31,6 +31,15 @@ export default function SignUp ()  {
         }
 
     };
+
+    useEffect(() => {
+        fetchSession()
+    },[])
+
+    if (session) {
+        navigate("/profile")
+        return
+    }
 
     return (
         <main>

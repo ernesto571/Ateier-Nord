@@ -8,19 +8,16 @@ interface FormData {
   password: string;
 }
 
-export interface User {
-    name: string
-    email: string
-}
 
 interface AuthStroe {
-    user: User | null;
     isLoading: boolean
-      error: string | null;
+    error: string | null;
+    session: any;
     formData: FormData
     signUp : (data: FormData) => Promise<void>
     login : (data: FormData) => Promise<void>
     logout: () => Promise<void>
+    fetchSession: () => Promise<void>
     setFormData: (data: Partial<FormData>) => void;
 }
 
@@ -31,10 +28,10 @@ const initialFormData: FormData = {
 };
 
 export const useAuthStore = create<AuthStroe>((set) => ({
-    user: null,
     isLoading: false,
     formData: initialFormData, 
     error: null,
+    session: null,
 
     signUp: async (data) => {
         set({isLoading: true})
@@ -92,6 +89,15 @@ export const useAuthStore = create<AuthStroe>((set) => ({
             console.error("🔴 logout : failed", err.message)
         } finally {
             set({ isLoading: false })
+        }
+    },
+
+    fetchSession : async () => {
+        try {
+            const currentSession = await supabase.auth.getSession()
+            set({session: currentSession.data})
+        } catch (err:any) {
+            console.error("Failed to get seesion", err.message)
         }
     },
 

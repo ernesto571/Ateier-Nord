@@ -1,4 +1,4 @@
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/Homepage";
@@ -7,6 +7,7 @@ import Apparel from "./pages/Category/Apparel";
 import ProductDetails from "./pages/ProductDetailsPage";
 import Wishlist from "./pages/Category/Wishlist";
 import SignUp from "./pages/auth/SignUp";
+import Login from "./pages/auth/Login";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -37,10 +38,11 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
         <Route path="/saved-reports" element={<ProtectedRoute><SavedReport /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} /> */}
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} /> */}
+        <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/all" element={<AllProducts />} />
         <Route path="/apparel" element={<Apparel />} />
         <Route path="/my-wishlist" element={<Wishlist />} />
