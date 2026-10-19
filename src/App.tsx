@@ -5,6 +5,7 @@ import HomePage from "./pages/Homepage";
 import AllProducts from "./pages/Category/AllProducts";
 import Apparel from "./pages/Category/Apparel";
 import ProductDetails from "./pages/ProductDetailsPage";
+import Wishlist from "./pages/Category/Wishlist";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -40,6 +41,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/all" element={<AllProducts />} />
         <Route path="/apparel" element={<Apparel />} />
+        <Route path="/my-wishlist" element={<Wishlist />} />
         <Route path="/:slug" element={<ProductDetails />} />
 
       </Routes>

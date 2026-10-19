@@ -6,7 +6,7 @@ import Footer from "../../components/Home/Footer";
 
 export default function AllProducts () {
 
-    const { allProducts, fetchAllProducts } = useProductStore()
+    const { allProducts, fetchAllProducts, productsLoading } = useProductStore()
 
     useEffect(() => {
         fetchAllProducts()
@@ -34,11 +34,32 @@ export default function AllProducts () {
                         </select>
                     </div> 
 
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 ">
-                        { allProducts?.map((p) => (
+                    { productsLoading ? (
+                       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <div
+                            key={index}
+                            className="rounded-xl border border-neutral-200 p-2.5 animate-pulse"
+                            >
+                            <div className="h-[180px] sm:h-[250px] rounded-lg bg-neutral-100" />
+            
+                            <div className="py-3 px-1 space-y-3">
+                                <div className="h-4 w-3/4 rounded bg-neutral-100" />
+                                <div className="flex justify-between items-center">
+                                <div className="h-3 w-1/4 rounded bg-neutral-100" />
+                                <div className="h-8 w-20 rounded-lg bg-neutral-100" />
+                                </div>
+                            </div>
+                            </div>
+                        ))}
+                        </div> 
+                    ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 ">
+                            { allProducts?.map((p) => (
                             <ProductCard key={p.id} product={p} />
-                        )) }
-                    </div>                                                                      
+                            )) }
+                        </div>  
+                    )}
                     
                 </section>
 

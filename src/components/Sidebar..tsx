@@ -1,13 +1,23 @@
-import { Footprints, Headphones, LayoutGrid, Shirt, Watch } from "lucide-react"
+import { Footprints, Headphones, Heart, LayoutGrid, Shirt, Watch } from "lucide-react"
 import { NavLink } from "react-router-dom"
+import { useProductStore } from "../store/ProductStore"
+import { useWishlistStore } from "../store/Wishlist"
+import { useLayoutEffect } from "react"
 
 export default function  Sidebar () {
+    const { allProducts } = useProductStore()
+    const { wishlistItems, fetchWishlistItems} = useWishlistStore()
+
+    useLayoutEffect(() => {
+        fetchWishlistItems()
+    }, [])
     const categories  = [
-        {icon: LayoutGrid, label:"All", length:8, to:"/all", end:true},
+        {icon: LayoutGrid, label:"All", length:allProducts?.length, to:"/all", end:true},
         {icon: Shirt, label:"Apparel", length:3, to:"/apparel" },
         {icon: Footprints, label:"Footwear", length:2, to:"/footwear" },
         {icon: Watch, label:"Accessories", length:5, to:"/accessories"},
-        {icon: Headphones, label:"Tech", length:8, to:"/tech"}
+        {icon: Headphones, label:"Tech", length:8, to:"/tech"},
+        {icon: Heart, label:"Wishlist", length:wishlistItems.length, to:"/my-wishlist"}
     ]
 
     return (
