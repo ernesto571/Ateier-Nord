@@ -6,6 +6,7 @@ import AllProducts from "./pages/Category/AllProducts";
 import Apparel from "./pages/Category/Apparel";
 import ProductDetails from "./pages/ProductDetailsPage";
 import Wishlist from "./pages/Category/Wishlist";
+import SignUp from "./pages/auth/SignUp";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -39,6 +40,7 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} /> */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/all" element={<AllProducts />} />
         <Route path="/apparel" element={<Apparel />} />
         <Route path="/my-wishlist" element={<Wishlist />} />
@@ -48,23 +50,19 @@ function App() {
       <Toaster
         position="bottom-center"
         toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#0a0a08",
-            color: "#f2f0e8",
-            borderRadius: "0px",
-            border: "1px solid #f2f0e8",
-            fontFamily: "JetBrains Mono, monospace",
-            fontSize: "0.78rem",
-            letterSpacing: "0.05em",
-            padding: "10px 16px",
-          },
-          success: {
-            iconTheme: { primary: "#1a5c35", secondary: "#f2f0e8" },
-          },
-          error: {
-            iconTheme: { primary: "#c0392b", secondary: "#f2f0e8" },
-          },
+            duration: 4000,
+            style: {
+                background: "#fff",
+                color: "#0a0a0a",
+                border: "1px solid #e5e5e5",
+                borderRadius: "12px",
+                fontSize: "14px",
+                fontWeight: 500,
+                padding: "12px 16px",
+                boxShadow: "0 4px 12px rgba(0,0,0,.06)",
+            },
+            success: { iconTheme: { primary: "#0a0a0a", secondary: "#fff" } },
+            error: { iconTheme: { primary: "#dc2626", secondary: "#fff" } },
         }}
       />
     </>

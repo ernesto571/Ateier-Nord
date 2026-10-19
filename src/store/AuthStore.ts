@@ -1,5 +1,12 @@
 import { create } from "zustand"
 import { supabase } from "../lib/supabase-client";
+import toast from "react-hot-toast";
+
+interface FormData {
+  name?: string;
+  email: string;
+  password: string;
+}
 
 export interface User {
     name: string
@@ -9,27 +16,40 @@ export interface User {
 interface AuthStroe {
     user: User | null;
     isLoading: boolean
-    signUp : (user: User, passwod:string) => Promise<void>
-    login : (email:string, password:string) => Promise<void>
+      error: string | null;
+    formData: FormData
+    signUp : (data: FormData) => Promise<void>
+    login : (data: FormData) => Promise<void>
+    logout: () => Promise<void>
+    setFormData: (data: Partial<FormData>) => void;
 }
 
-export const useAuthStore = create<AuthStroe>((set, get) => ({
+const initialFormData: FormData = {
+  name: '',
+  email: '',
+  password: '',
+};
+
+export const useAuthStore = create<AuthStroe>((set) => ({
     user: null,
     isLoading: false,
+    formData: initialFormData, 
+    error: null,
 
-    signUp: async (user, password) => {
+    signUp: async (data) => {
         set({isLoading: true})
 
         try {
             const { error } = await supabase.auth.signUp({
-                email: user.email, password: password, 
+                email: data.email, password: data.password, 
                 options: {
                     data: {
-                      display_name: user.name,
+                      display_name: data.name,
                     },
                 },
             })
             if (error) {
+                set({ error: error.message, isLoading: false });
                 console.error(error.message)
                 return;
             }
@@ -41,14 +61,15 @@ export const useAuthStore = create<AuthStroe>((set, get) => ({
             
     },
 
-    login: async (email, password) => {
+    login: async (data) => {
         set({isLoading: true})
 
         try {
             const { error } = await supabase.auth.signInWithPassword({
-                email: email, password: password, 
+                email: data.email, password: data.password, 
             })
             if (error) {
+                set({ error: error.message, isLoading: false });
                 console.error(error.message)
                 return;
             }
@@ -59,5 +80,21 @@ export const useAuthStore = create<AuthStroe>((set, get) => ({
         }
             
     },
+
+    logout: async () => {
+        set({ isLoading: true })
+        try {
+            const { error } = await supabase.auth.signOut()
+            if (error) { toast.error(error.message) }
+            toast.success("Signed out.")
+        } catch (err: any) {
+            toast.error("Something went wrong. Please try again.")
+            console.error("🔴 logout : failed", err.message)
+        } finally {
+            set({ isLoading: false })
+        }
+    },
+
+    setFormData: (data) => set((s) => ({ formData: { ...s.formData, ...data } })),
 
 }))
