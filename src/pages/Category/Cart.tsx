@@ -34,21 +34,21 @@ useLayoutEffect(() => {
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4" >
                     { items.map((i) => (
-                        <div key={`${i.id}-${i.color}-${i.size}`} className=" flex gap-3">
+                        <div key={`${i.product_id}-${i.color}-${i.size}`} className=" flex gap-3">
                             <div className="w-20 h-20 rounded-lg overflow-hidden ph shrink-0">
                                 <img src={i.image} alt={i.name} loading="lazy" className="w-full h-full object-cover " />
                             </div>
                             <div className="flex-1 text-sm"><div className="flex justify-between">
                                 <span className="font-medium">{i.name}</span>
-                                <button aria-label="Remove" onClick={() => removeItem(i.id, i.color, i.size)}>
+                                <button aria-label="Remove" onClick={() => removeItem(i.product_id, i.color, i.size)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="trash-2" className="lucide lucide-trash-2 w-4 h-4 text-neutral-400"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
                                 </button>
                             </div>
                             <p className="text-neutral-500">Size {i.size} · ${i.price.toFixed(2)}</p>
                             <div className="mt-2 inline-flex items-center border border-neutral-200 rounded-md">
-                                <button disabled={i.quantity === 1} onClick={() => updateQuantity(i.id, i.color, i.size, i.quantity-1)} className="w-8 h-7">−</button>
+                                <button disabled={i.quantity === 1} onClick={() => updateQuantity(i.product_id, i.color, i.size, i.quantity-1)} className="w-8 h-7">−</button>
                                 <span className="w-6 text-center">{i.quantity} </span>
-                                <button  onClick={() => updateQuantity(i.id, i.color, i.size, i.quantity+1)} className="w-8 h-7">+</button>
+                                <button  onClick={() => updateQuantity(i.product_id, i.color, i.size, i.quantity+1)} className="w-8 h-7">+</button>
                             </div></div>
                         </div>
                     )) }
@@ -71,7 +71,7 @@ useLayoutEffect(() => {
                             </div>
                             <div className="flex justify-between font-semibold text-base pt-2 border-t border-neutral-200">
                                 <span>Total</span>
-                                <span>$140.00</span>
+                                <span>${total}</span>
                             </div>
                         </div>
                     </div>

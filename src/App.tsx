@@ -8,6 +8,9 @@ import ProductDetails from "./pages/ProductDetailsPage";
 import Wishlist from "./pages/Category/Wishlist";
 import SignUp from "./pages/auth/SignUp";
 import Login from "./pages/auth/Login";
+import { useAuthStore } from "./store/AuthStore";
+import { useEffect } from "react";
+import { supabase } from "./lib/supabase-client";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -25,9 +28,25 @@ import Login from "./pages/auth/Login";
 //   return <>{children}</>;
 // };
 
-
 function App() {
 
+  const { fetchSession } = useAuthStore()
+
+  useEffect(() => {
+    //  auth listener
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        useAuthStore.setState({ session });
+      }
+    );
+  
+    fetchSession();
+  
+    // to prvent memory leak
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <>

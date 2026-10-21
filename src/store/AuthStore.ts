@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { supabase } from "../lib/supabase-client";
 import toast from "react-hot-toast";
+import type { Session } from "@supabase/supabase-js"
 
 interface FormData {
   name?: string;
@@ -12,7 +13,7 @@ interface FormData {
 interface AuthStroe {
     isLoading: boolean
     error: string | null;
-    session: any;
+    session: Session | null;
     formData: FormData
     signUp : (data: FormData) => Promise<void>
     login : (data: FormData) => Promise<void>
@@ -92,12 +93,16 @@ export const useAuthStore = create<AuthStroe>((set) => ({
         }
     },
 
-    fetchSession : async () => {
+    fetchSession: async () => {
         try {
-            const currentSession = await supabase.auth.getSession()
-            set({session: currentSession.data})
-        } catch (err:any) {
-            console.error("Failed to get seesion", err.message)
+            const { data: { session }, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error.message)
+                return
+            }
+            set({ session })
+        } catch (err: any) {
+            console.error("Failed to get session", err.message)
         }
     },
 
