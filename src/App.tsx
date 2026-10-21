@@ -11,6 +11,7 @@ import Login from "./pages/auth/Login";
 import { useAuthStore } from "./store/AuthStore";
 import { useEffect } from "react";
 import { supabase } from "./lib/supabase-client";
+import Checkout from "./pages/CheckoutPage";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -66,6 +67,7 @@ function App() {
         <Route path="/apparel" element={<Apparel />} />
         <Route path="/my-wishlist" element={<Wishlist />} />
         <Route path="/:slug" element={<ProductDetails />} />
+        <Route path="/checkout" element={<Checkout />} />
 
       </Routes>
       <Toaster

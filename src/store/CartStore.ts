@@ -14,6 +14,7 @@ export interface CartItem {
 
 interface CartStore {
     items: CartItem[]
+    isLoading: boolean
     fetchCartItems: () => Promise<void>
     addItem: (item: CartItem) => Promise<void>
     removeItem: (product_id: string, color: string, size: string) => void
@@ -40,14 +41,17 @@ const getGuestCart = (): CartItem[] => {
 
 export const useCartStore = create<CartStore>((set, get) => ({
     items: [],
+    isLoading: false ,
 
     fetchCartItems: async () => {
+        set({isLoading: true})
         const session = useAuthStore.getState().session
         const userId = session?.user.id
 
         if (!userId) {
             const saved = getGuestCart()
             set({items: saved})
+            set({isLoading: false})
             return
         }
 
@@ -58,7 +62,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
             return
         }
 
-        set({items: data})
+        set({items: data, isLoading: false})
     },
 
     addItem: async (item) => {
