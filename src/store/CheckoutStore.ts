@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { supabase } from "../lib/supabase-client"
 import { useProfileStore } from "./ProfileStore";
+import toast from "react-hot-toast";
 
 // interface Order {
 //     id: string;
@@ -18,6 +19,7 @@ interface FormData {
 interface CheckoutStore {
     isLoading: boolean;
     error: string | null;
+    client_secret: any
     formData: FormData
     checkout: (coupon_code: string, data:FormData) => Promise<void>
     setFormData: (data: Partial<FormData>) => void;
@@ -37,6 +39,7 @@ const initialFormData: FormData = {
 export const useCheckoutStore = create <CheckoutStore>((set) => ({
     isLoading: false,
     error: null,
+    client_secret: null,
     formData: initialFormData,
     
     checkout: async (coupon_code, data) => {
@@ -61,9 +64,30 @@ export const useCheckoutStore = create <CheckoutStore>((set) => ({
             if (checkoutError){
                 set({error: checkoutError, isLoading:false})
                 console.log(checkoutError.message)
+                return
             }
-            set({isLoading: false, error: null})
             console.log("Order added to databse successfully ", checkoutData ) 
+            
+            const { data: paymentData, error: paymentError} = await supabase.functions.invoke("create-payment-session", {
+                body: {
+                  orderId: checkoutData.orderId,
+                },
+            });
+            
+            if (paymentError) {
+                set({error: paymentError.message, isLoading:false})
+                console.log(paymentError.message)
+                return
+            }
+
+            if (!paymentData?.success || !paymentData.clientSecret) {
+                set({error: paymentData?.error, isLoading: false})
+                toast.error("Could not initialize payment. Please, try again later")
+                return
+            }
+
+            console.log("Payment session successfully created ", paymentData.clientSecret ) 
+            set({isLoading: false, error: null, client_secret: paymentData.clientSecret})
         } catch (err: any) {
             console.log("Error in checkout function", err.message)
         }
