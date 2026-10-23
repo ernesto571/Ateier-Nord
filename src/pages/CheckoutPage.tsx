@@ -2,13 +2,13 @@ import { useEffect, useState } from "react"
 import { useCartStore } from "../store/CartStore"
 import { useCheckoutStore } from "../store/CheckoutStore"
 import toast from "react-hot-toast"
-
+import StripePaymentSection from "../components/StripePaymentSection"
 
 export default function Checkout () {
 
     const [activeTab, setActiveTab] = useState("shipping")
     const { items, fetchCartItems } = useCartStore()
-    const {checkout, isLoading, error, formData, setFormData} = useCheckoutStore()
+    const {checkout, isLoading, error, formData, setFormData, client_secret, order_number, order_total} = useCheckoutStore()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ [e.target.name]: e.target.value });
@@ -80,18 +80,12 @@ export default function Checkout () {
                         </div>
                     ) }   
 
-                    { activeTab === "payment" && (
-                        <div  className=" space-y-3" >
-                            <input required placeholder="Card Number (Demo)" maxLength={19} className="inp" />
-                            <div className="grid grid-cols-2 gap-3">
-                                <input required placeholder="MM / YY" className="inp" />
-                                <input required placeholder="CVC" maxLength={4} className="inp" />
-                            </div>
-                            <div className="flex gap-3">
-                                <button onClick={() => setActiveTab("shipping")} className="h-12 px-5 rounded-lg border border-neutral-200 text-sm">Back</button>
-                                <button className="btn flex-1">Place Order</button>
-                            </div>
-                        </div>
+                    { activeTab === "payment" && client_secret && (
+                        <StripePaymentSection
+                            clientSecret={client_secret}
+                            orderNumber={order_number}
+                            total={order_total}
+                        />
                     ) }                  
                 </div>
 

@@ -19,6 +19,8 @@ interface FormData {
 interface CheckoutStore {
     isLoading: boolean;
     error: string | null;
+    order_number: string ;
+    order_total: number ;
     client_secret: any
     formData: FormData
     checkout: (coupon_code: string, data:FormData) => Promise<void>
@@ -40,6 +42,8 @@ export const useCheckoutStore = create <CheckoutStore>((set) => ({
     isLoading: false,
     error: null,
     client_secret: null,
+    order_number: "",
+    order_total: 0,
     formData: initialFormData,
     
     checkout: async (coupon_code, data) => {
@@ -66,7 +70,8 @@ export const useCheckoutStore = create <CheckoutStore>((set) => ({
                 console.log(checkoutError.message)
                 return
             }
-            console.log("Order added to databse successfully ", checkoutData ) 
+            console.log("Order added to databse successfully ", checkoutData )
+            set({order_number: checkoutData.orderNumber, order_total: checkoutData.total}) 
             
             const { data: paymentData, error: paymentError} = await supabase.functions.invoke("create-payment-session", {
                 body: {
