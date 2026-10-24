@@ -63,7 +63,7 @@ export default function Profile(){
 
     return(
         <main className="">
-            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[8rem]">
+            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[8rem] mb-10 min-h-screen ">
                 <aside>
                     <div className="rounded-2xl border border-neutral-200 p-5 text-center">
                         <div className="w-20 h-20 rounded-full bg-neutral-950 text-white text-2xl font-semibold grid place-items-center mx-auto" >{first}{last}</div>
@@ -91,7 +91,8 @@ export default function Profile(){
                     </div>
                 </aside>
 
-                <section className="min-w-0">
+                { activeTab === "overview" && (
+                    <section className="min-w-0">
                     <h2 className="text-2xl font-semibold mb-5">Welcome Back, {profile?.name.split(" ")[0]}</h2>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" >
                         { info.map((i) => {
@@ -136,7 +137,35 @@ export default function Profile(){
                         )) }
                     </div>
                     
-                </section>
+                    </section> 
+                ) }
+                
+                { activeTab === "orders" && (
+                    <section className="min-w-0">
+                        <h2 className="text-2xl font-semibold mb-5">Order History</h2>
+                        { orders.map(((o) => (
+                            <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
+                                <div className="flex flex-wrap justify-between gap-2 text-sm">
+                                    <div>
+                                        <b>{o.order_number} </b>
+                                        <p className="text-xs text-neutral-500 mt-0.5">{formatDate(o.created_at)} · {o.order_items.length} Items</p>
+                                    </div>
+                                    <b>${o.total.toFixed(2)} </b>
+
+                                    
+                                </div>  
+                                <div className="flex gap-2 mt-3" >
+                                    { o.order_items.map((i) => (
+                                        <div  className="w-14 h-14 rounded-lg overflow-hidden " >
+                                            <img src={i.image[0]} alt="img" className="object-cover w-full h-full"/>
+                                        </div>
+                                    )) }
+                                </div>
+
+                            </div>
+                        ))) }
+                    </section>
+                ) }
             </section>
             <Footer />
         </main>
