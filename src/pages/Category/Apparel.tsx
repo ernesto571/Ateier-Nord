@@ -6,7 +6,7 @@ import { useProductStore } from "../../store/ProductStore";
 
 export default function Apparel () {
 
-    const {allProducts, fetchAllProducts } = useProductStore()
+    const {allProducts } = useProductStore()
     const categories = [
         {label:"All Apparel"},
         {label:"Tees & Tops"},
@@ -24,11 +24,6 @@ export default function Apparel () {
     const filteredApparel = apparel!.filter(
         (a) => activeCategory === "All Apparel" || a.subcat === activeCategory
     )
-
-    
-    useEffect(() => {
-        fetchAllProducts()
-    }, [])
 
     return (
         <main>

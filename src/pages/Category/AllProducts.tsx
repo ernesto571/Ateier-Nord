@@ -6,11 +6,7 @@ import Footer from "../../components/Home/Footer";
 
 export default function AllProducts () {
 
-    const { allProducts, fetchAllProducts, productsLoading } = useProductStore()
-
-    useEffect(() => {
-        fetchAllProducts()
-    }, [])
+    const { allProducts, productsLoading } = useProductStore()
 
     return(
         <main>

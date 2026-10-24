@@ -57,7 +57,7 @@ function StripePaymentForm({
   if (result.type !== "success") {
 
     return (
-    <div className="flex items-center justify-center gap-2 text-sm text-neutral-500">
+    <div className="flex items-center justify-center h-[40vh] gap-2 text-sm text-neutral-500">
         <Loader2 className="h-5 w-5 animate-spin text-black" />
         <p>Loading payment form...</p>
     </div>

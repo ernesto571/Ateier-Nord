@@ -6,17 +6,14 @@ import Footer from "../../components/Home/Footer";
 import ProductCard from "../../components/ProductCard";
 import Sidebar from "../../components/Sidebar.";
 import { useWishlistStore } from "../../store/Wishlist";
+import { useProductStore } from "../../store/ProductStore";
 
 export default function Wishlist() {
   const {
     wishlistItems,
-    fetchWishlistItems,
     isLoading,
   } = useWishlistStore();
-
-  useEffect(() => {
-    fetchWishlistItems();
-  }, [fetchWishlistItems]);
+  const {allProducts} = useProductStore();
 
   return (
     <main>
@@ -95,9 +92,25 @@ export default function Wishlist() {
           ) : (
             /* Wishlist products */
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {wishlistItems.map((w) => (
-                <ProductCard key={w.id} product={w} />
-              ))}
+              {wishlistItems.map((w) => {
+                const item = allProducts!.find((p) => p.id === w.product_id ) 
+                return (
+                  <ProductCard
+                    key={w.product_id}
+                    product={{
+                        id: w.product_id,
+                        name: w.product_name,
+                        slug: w.slug,
+                        price: w.price,
+                        images: w.images,
+                        rating: w.rating,
+                        colors: item!.colors,
+                        sizes: item!.sizes,
+                    }}
+                />
+                )
+                
+              })}
             </div>
           )}
         </section>

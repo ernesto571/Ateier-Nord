@@ -12,6 +12,10 @@ import { useAuthStore } from "./store/AuthStore";
 import { useEffect } from "react";
 import { supabase } from "./lib/supabase-client";
 import Checkout from "./pages/CheckoutPage";
+import Successful from "./pages/SuccessfulPage";
+import { useWishlistStore } from "./store/Wishlist";
+import { useCartStore } from "./store/CartStore";
+import { useProductStore } from "./store/ProductStore";
 
 // interface RouteProps {
 //   children: React.ReactNode;
@@ -32,22 +36,37 @@ import Checkout from "./pages/CheckoutPage";
 function App() {
 
   const { fetchSession } = useAuthStore()
+  const { fetchWishlistItems } = useWishlistStore()
+  const { fetchCartItems } = useCartStore()
+  const { fetchAllProducts } = useProductStore()
 
   useEffect(() => {
-    //  auth listener
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        useAuthStore.setState({ session });
-      }
+        (_event, session) => {
+            useAuthStore.setState({ session });
+        }
     );
-  
-    fetchSession();
-  
-    // to prvent memory leak
-    return () => {
-      authListener.subscription.unsubscribe();
+
+    const initializeApp = async () => {
+        console.log("Fetching session...");
+
+        await fetchSession();
+
+        await fetchAllProducts()
+
+        console.log("Fetching wishlist...");
+        await fetchWishlistItems();
+
+        console.log("Fetching cart...");
+        await fetchCartItems();
     };
-  }, []);
+
+    initializeApp();
+
+    return () => {
+        authListener.subscription.unsubscribe();
+    };
+}, []);
 
   return (
     <>
@@ -68,6 +87,7 @@ function App() {
         <Route path="/my-wishlist" element={<Wishlist />} />
         <Route path="/:slug" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/successful" element={<Successful />} />
 
       </Routes>
       <Toaster

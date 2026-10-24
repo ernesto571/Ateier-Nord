@@ -43,7 +43,7 @@ export default function ProductDetails() {
     ]
 
     const isWishlisted = useWishlistStore((s) =>
-        s.wishlistItems.some((i) => i.id === product?.id)
+        s.wishlistItems.some((i) => i.product_id === product?.id)
     )
 
     const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate("/"))
@@ -76,7 +76,7 @@ export default function ProductDetails() {
     )
 
     const addToCart = () => {
-        addItem({ id: product.id, name: product.name, price: product.price, image: product.images[0], color, size, quantity })
+        addItem({ product_id: product.id, name: product.name, price: product.price, image: product.images[0], color, size, quantity })
         setShowCart(true)
     }
 
@@ -189,7 +189,7 @@ export default function ProductDetails() {
                         <button disabled={!size} onClick={addToCart}  className="btn flex-1 h-12 rounded-xl inline-flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="shopping-bag" className="lucide lucide-shopping-bag w-4 h-4"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>Add to bag · ${(product?.price * quantity).toFixed(2)}</button>
                     </div>
                     {/* watchlist */}
-                    <button disabled={isLoading} onClick={() => isWishlisted ? removeItem(product.id) : addWishlistItem({ id:product.id, name:product.name, slug:product.slug, price:product.price, rating:product.rating, images:product.images })} className="mt-3 w-full h-11 rounded-xl border border-neutral-200 text-sm font-medium flex items-center justify-center hover:bg-neutral-50 transition disabled:cursor-not-allowed">
+                    <button disabled={isLoading} onClick={() => isWishlisted ? removeItem(product.id) : addWishlistItem({ product_id:product.id, product_name:product.name, slug:product.slug, price:product.price, rating:product.rating, images:product.images })} className="mt-3 w-full h-11 rounded-xl border border-neutral-200 text-sm font-medium flex items-center justify-center hover:bg-neutral-50 transition disabled:cursor-not-allowed">
                         { !isWishlisted ? (
                             <span className="flex gap-2 items-center"><Heart className="size-4 text-black" /> Add to wishlist </span>
                         ) : (

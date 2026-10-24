@@ -101,7 +101,7 @@ export default function Checkout () {
                         )) }
                     </div>
 
-                    <div className="flex gap-2 mt-7">
+                    <div className={`gap-2 mt-7 ${activeTab === "payment" ? "hidden" : "flex"}`}>
                         <input placeholder="Promo Code" className="inp !h-10" onChange={(e) => setCoupon(e.target.value)} value={coupon} />
                         <button onClick={handleCoupon} className="h-10 px-4 rounded-lg border border-neutral-200 text-sm">Apply</button>
                     </div>
