@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Sidebar from "../../components/Sidebar.";
 import { useProductStore } from "../../store/ProductStore";
 import ProductCard from "../../components/ProductCard";

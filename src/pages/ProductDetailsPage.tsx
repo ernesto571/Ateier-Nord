@@ -7,6 +7,7 @@ import { useCartStore } from "../store/CartStore";
 import Cart from "./Category/Cart";
 import { useWishlistStore } from "../store/Wishlist";
 import { Heart } from "lucide-react";
+import { useRecentlyViewedStore } from "../store/RecentlyViewedStore";
 
 interface Product {
     id: string;
@@ -46,6 +47,9 @@ export default function ProductDetails() {
         s.wishlistItems.some((i) => i.product_id === product?.id)
     )
 
+    const addRecentlyViewed = useRecentlyViewedStore(
+        (state) => state.addRecentlyViewed
+    );
     const goBack = () => (window.history.length > 1 ? navigate(-1) : navigate("/"))
 
     const addItem = useCartStore((s:any) => s.addItem)
@@ -67,6 +71,21 @@ export default function ProductDetails() {
         setColor(found?.colors[0] ?? "")
         setSize(found?.sizes[0] ?? "")
     }, [allProducts, slug])
+
+    useEffect(() => {
+        if (!product) return;
+    
+        addRecentlyViewed({
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            images: product.images,
+            rating: product.rating,
+            colors: product.colors,
+            sizes: product.sizes,
+        });
+    }, [product, addRecentlyViewed]);
 
     if (!product) return null
 

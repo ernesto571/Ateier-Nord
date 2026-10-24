@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route, Navigate} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Navbar from "./components/Navbar";
@@ -16,22 +17,22 @@ import Successful from "./pages/SuccessfulPage";
 import { useWishlistStore } from "./store/Wishlist";
 import { useCartStore } from "./store/CartStore";
 import { useProductStore } from "./store/ProductStore";
+import Profile from "./pages/ProfilePage";
 
-// interface RouteProps {
-//   children: React.ReactNode;
-// }
+interface RouteProps {
+  children: React.ReactNode;
+}
 
-// const ProtectedRoute: React.FC<RouteProps> = ({ children }) => {
-//   const { user, isLoading } = useAuthStore();
+const ProtectedRoute: React.FC<RouteProps> = ({ children }) => {
+  const { session, isLoading } = useAuthStore();
 
-//   if (isLoading) return null;
-//   if (!user) {
-//       toast.error("Sign in to view this page.");
-//       return <Navigate to="/dashboard" replace />;
-//   }
+  if (isLoading) return null;
+  if (!session) {
+      return <Navigate to="/login" replace />;
+  }
 
-//   return <>{children}</>;
-// };
+  return <>{children}</>;
+};
 
 function App() {
 
@@ -88,6 +89,7 @@ function App() {
         <Route path="/:slug" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/successful" element={<Successful />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> 
 
       </Routes>
       <Toaster

@@ -5,6 +5,7 @@ interface Profile {
     name: string
     email: string
     phone: string
+    created_at: string | number
 }
 
 interface ProfileStore {
@@ -27,6 +28,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
                     name: user.user_metadata.display_name ?? "",
                     email: user.email ?? "",
                     phone: user.user_metadata.phone ?? "",
+                    created_at: user.created_at
                 },
             })
         } catch (err: any) {
