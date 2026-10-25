@@ -114,6 +114,7 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
             console.log("Error removing wishlist item in database", error.message)
             return
         }
-        set({ wishlistItems: updated })
+        await get().fetchWishlistItems()
+        
     },
 }))

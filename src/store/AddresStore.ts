@@ -24,7 +24,8 @@ interface AddressStore {
     formData: FormData;
     fetchAddress: () => Promise<void>
     addAddress: (data:FormData) => Promise<void>
-    updateAddress: (id: string) => void
+    setDefaultAddress: (id: string) => void
+    deleteAddress: (id: string) => void
     setFormData: (data: Partial<FormData>) => void;
 }
 
@@ -35,7 +36,7 @@ const initialFormData: FormData = {
     postal_code: '',
 };
 
-export const useAdressStore = create<AddressStore>((set) => ({
+export const useAddressStore = create<AddressStore>((set, get) => ({
     isLoading: false,
     formData: initialFormData,
     addressList: [],
@@ -50,23 +51,29 @@ export const useAdressStore = create<AddressStore>((set) => ({
             return
         }
 
-        const { error, data } = await supabase.from("addresses").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+        const { error, data } = await supabase.from("addresses").select("*").eq("user_id", userId).order("created_at", { ascending: true });
 
         if (error){
             console.log("Error fetching adress from database", error.message)
             return
         }
 
+        console.log("Address fetched", data)
+
         set({addressList: data, isLoading: false})
     },
 
     addAddress: async (data) => {
         set({isLoading: true})
+
         const session = useAuthStore.getState().session
         const userId = session?.user.id
 
+
+
         if (!userId){
             console.log("User not authenticated")
+            set({isLoading: false})
             return
         }
         try {
@@ -78,14 +85,14 @@ export const useAdressStore = create<AddressStore>((set) => ({
                 postal_code: data.postal_code
             }).select().single()
 
-            if ( error ){{
+            if ( error ){
                 console.log("Failed to add adress", error.message)
                 set({isLoading: false})
                 return
-            }}
+            }
 
             console.log("Adress ssaved to database")
-            set({addressList: addressData})
+            set({addressList: [...get().addressList, addressData ]})
 
         } catch (err: any) {
             console.log("Error in addAdress", err.message)
@@ -94,26 +101,56 @@ export const useAdressStore = create<AddressStore>((set) => ({
         }
     },
 
-    updateAddress: async (id) => {
-        set({isLoading: true})
+    setDefaultAddress: async (addressId) => {
         const session = useAuthStore.getState().session
         const userId = session?.user.id
+    
+        if (!userId) return
+    
+        // Remove the current default
+        const { error: resetError } = await supabase
+            .from("addresses")
+            .update({ is_default: false })
+            .eq("user_id", userId)
+            .eq("is_default", true)
+    
+        if (resetError) {
+            console.error("Failed to reset default address:", resetError.message)
+            return
+        }
+    
+        // Set the selected address as default
+        const { error } = await supabase
+            .from("addresses")
+            .update({ is_default: true })
+            .eq("id", addressId)
+            .eq("user_id", userId)
+    
+        if (error) {
+            console.error("Failed to update default address:", error.message)
+            return
+        }
+    
+        // Refresh addresses from the database
+        await get().fetchAddress()
 
-        if (!userId){
-            console.log("User not authenticated")
+    },
+
+    deleteAddress: async (addressID) => {
+        const session = useAuthStore.getState().session
+        const userId = session?.user.id
+    
+        if (!userId) return
+
+        const { error } = await supabase.from("addresses").delete().eq("id", addressID).eq("user_id", userId)
+
+        if (error){
+            console.log("Error removing adddress in database", error.message)
             return
         }
 
-        const { error } = await supabase.from("addresses").update({ is_default: true }).eq("user_id", userId).eq("id", id)
-
-        if(error) {
-            console.log("Error updating addreess", error.message)
-            set({isLoading: false})
-            return
-        }
-
-        console.log("address successfully updated")
-        set({isLoading: false})
+        // Refresh addresses from the database
+        await get().fetchAddress()
     },
 
     setFormData: (data) => set((s) => ({ formData: { ...s.formData, ...data } })),

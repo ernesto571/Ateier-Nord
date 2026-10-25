@@ -7,6 +7,8 @@ import { useWishlistStore } from "../store/Wishlist"
 import { useRecentlyViewedStore } from "../store/RecentlyViewedStore"
 import ProductCard from "../components/ProductCard"
 import Footer from "../components/Home/Footer"
+import { useAddressStore } from "../store/AddresStore"
+import toast from "react-hot-toast"
 
 const formatDate = (created_at: string | number) => {
     return new Date(created_at).toLocaleDateString("en-US", {
@@ -21,6 +23,7 @@ export default function Profile(){
     const { profile, fetchProfile } = useProfileStore()
     const {orders, fetchOrders}= useOrderStore()
     const { wishlistItems } = useWishlistStore()
+    const { isLoading, formData, addressList, fetchAddress, addAddress, setDefaultAddress, deleteAddress, setFormData } = useAddressStore()
     const [activeTab, setActiveTab] = useState("overview")
     const first = profile?.name.split(" ")[0].charAt(0)
     const last = profile?.name.split(" ")[1].charAt(0)
@@ -30,6 +33,10 @@ export default function Profile(){
     const recentlyViewed = useRecentlyViewedStore(
         (state) => state.recentlyViewed
     );
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ [e.target.name]: e.target.value });
+    };
 
     const tabs = [
         {id:"overview", label:"Overview", icon: LayoutGrid},
@@ -56,9 +63,24 @@ export default function Profile(){
         console.log("Logged out successfully");
     };
 
+    const handleAddAddress = async () => {
+        if (!formData.label?.trim()) return toast.error("Label is required.");
+        if (!formData.street_address?.trim()) return toast.error("Street Address is required.");
+        if (!formData.city) return toast.error("City is required.");
+        if (!formData.postal_code) return toast.error("Postal Code is required.");
+        try {
+            await addAddress(formData);
+            
+        } catch (err) {
+            console.error("Error in handleAddAddress", err);
+        }
+
+    };
+
     useEffect(() => {
         fetchProfile()
         fetchOrders()
+        fetchAddress()
     }, [])
 
     return(
@@ -165,6 +187,47 @@ export default function Profile(){
                             </div>
                         ))) }
                     </section>
+                ) }
+
+                { activeTab === "addresses" && (
+                    <div className="min-w-0" >
+                        <h2 className="text-2xl font-semibold mb-5">Saved Addresses</h2>
+                        { addressList.length === 0 && (
+                            <p className="text-sm text-neutral-500 py-6">No addresses saved yet.</p>
+                        ) }
+
+                        <div className=" grid sm:grid-cols-2 gap-4" >
+                            { addressList.map((a) => (
+                                <div key={a.id} className={`rounded-2xl border ${a.is_default === true? "border-neutral-950" : "border-neutral-200"}  p-4 text-sm`} >
+                                    <div className="flex justify-between">
+                                        <b>{a.label} </b>
+                                        { a.is_default === true ? (
+                                            <span className="text-xs">Default</span>
+                                        ) : (
+                                            <button onClick={() => setDefaultAddress(a.id)} className="text-xs underline" >Make Default</button>
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-neutral-600 mt-2" >{a.street_address} </span>
+                                        <span className="text-neutral-600 mt-1" >{a.city}, {a.postal_code} </span>
+                                    </div>
+                                    <button onClick={() => deleteAddress(a.id)} className="mt-3 text-xs text-red-600">Remove</button>
+
+                                    
+                                </div>
+                            )) }
+                        </div>
+                        
+
+                        <div className="rounded-2xl border border-neutral-200 p-5 mt-6 grid sm:grid-cols-2 gap-3">
+                            <h3 className="font-semibold sm:col-span-2">Add New Address</h3>
+                            <input name="label" placeholder="Label (Home, Work)" className="inp" value={formData.label} onChange={handleChange}/>
+                            <input name="street_address" placeholder="Street Address" className="inp" value={formData.street_address} onChange={handleChange}/>
+                            <input name="city"  placeholder="City" className="inp" value={formData.city} onChange={handleChange}/>
+                            <input name="postal_code"  placeholder="Postal Code" className="inp" value={formData.postal_code} onChange={handleChange} />
+                            <button disabled={isLoading} onClick={handleAddAddress} className="btn sm:col-span-2 disabled:opacity-50 disabled:cursor-not-allowed">Save Address</button>
+                        </div>
+                    </div>
                 ) }
             </section>
             <Footer />
