@@ -33,7 +33,7 @@ export const useOrderStore = create<OrderStore>((set) => ({
             return
         }
 
-        const { error, data } = await supabase.from("orders").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+        const { error, data } = await supabase.from("orders").select("*").eq("user_id", userId).order("created_at", { ascending: false }).eq("payment_status", "paid");
 
         if (error){
             console.log("Error fetching orders from database", error.message)

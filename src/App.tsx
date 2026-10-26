@@ -18,6 +18,7 @@ import { useWishlistStore } from "./store/Wishlist";
 import { useCartStore } from "./store/CartStore";
 import { useProductStore } from "./store/ProductStore";
 import Profile from "./pages/ProfilePage";
+import AnnouncementBar from "./components/Announcement";
 
 interface RouteProps {
   children: React.ReactNode;
@@ -71,8 +72,10 @@ function App() {
 
   return (
     <>
-      {/* <AuthListener /> */}
+      <AnnouncementBar />
       <Navbar />
+
+      <main>
       <Routes>
         {/* <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/" element={<Dashboard />} />
@@ -92,6 +95,8 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} /> 
 
       </Routes>
+      </main>
+      
       <Toaster
         position="bottom-center"
         toastOptions={{

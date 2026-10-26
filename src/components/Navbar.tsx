@@ -3,6 +3,7 @@ import { navLinks } from "../constants";
 import { useEffect, useState } from "react";
 import { useCartStore } from "../store/CartStore";
 import Cart from "../pages/Category/Cart";
+import { useWishlistStore } from "../store/Wishlist";
 
 
 export default function Navbar(){
@@ -10,8 +11,8 @@ export default function Navbar(){
     const [scrolled, setScrolled] = useState(false);
     const [showCart, setShowCart] = useState(false)
     const {items, fetchCartItems} = useCartStore()
+    const { wishlistItems } = useWishlistStore()
     
-    const [showBanner, setShowBanner] = useState(true);
 
     useEffect(() => {
         fetchCartItems()
@@ -27,15 +28,6 @@ export default function Navbar(){
 
     return(
         <main className="fixed top-0 left-0 w-screen  transition-all duration-300 z-50">
-            { showBanner && (
-                <div className="bg-neutral-950 text-white text-xs">
-                <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-                    <span className="mx-auto">Everyday finds across style, tech and more — Use Code SAVE10 For 10% Off</span>
-                    <button onClick={() => setShowBanner(false)} aria-label="Dismiss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="x" className="lucide lucide-x w-4 h-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-                    </button>
-                </div>
-            </div>
-            )}
             
             <nav className={` px-3 lg:px-14 py-2 md:py-3 flex justify-between items-center border-default 
             ${scrolled ? "bg-white/75 backdrop-blur-md shadow-sm"
@@ -54,7 +46,7 @@ export default function Navbar(){
                     <div className="hidden md:flex-1 max-w-md ml-auto relative"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="search" className="lucide lucide-search w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
                     <input placeholder="Search Products" className="w-[400px] h-10 pl-9 pr-3 rounded-lg border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-950"/></div>
 
-                    <button onClick={() => navigate("/wishlist")} className="relative p-2" aria-label="Wishlist"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="heart" className="lucide lucide-heart w-5 h-5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg><b id="wc" className="absolute -top-0.5 -right-0.5 bg-neutral-950 text-white text-[10px] rounded-full w-4 h-4 grid place-items-center bump">1</b></button>
+                    <button onClick={() => navigate("/wishlist")} className="relative p-2" aria-label="Wishlist"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="heart" className="lucide lucide-heart w-5 h-5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg><b id="wc" className="absolute -top-0.5 -right-0.5 bg-neutral-950 text-white text-[10px] rounded-full w-4 h-4 grid place-items-center bump">{wishlistItems.length} </b></button>
 
                     <button onClick={() => navigate("/profile")} className="p-2" aria-label="Account"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-lucide="user" className="lucide lucide-user w-5 h-5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></button>
 

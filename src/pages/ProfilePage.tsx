@@ -20,7 +20,7 @@ const formatDate = (created_at: string | number) => {
 
 export default function Profile(){
 
-    const { profile, fetchProfile } = useProfileStore()
+    const { profile, fetchProfile, profileFormData, setProfileFormData, updateProfile, deleteAccount, profileLoading } = useProfileStore()
     const {orders, fetchOrders}= useOrderStore()
     const { wishlistItems } = useWishlistStore()
     const { isLoading, formData, addressList, fetchAddress, addAddress, setDefaultAddress, deleteAddress, setFormData } = useAddressStore()
@@ -36,6 +36,10 @@ export default function Profile(){
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ [e.target.name]: e.target.value });
+    };
+
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProfileFormData({ [e.target.name]: e.target.value });
     };
 
     const tabs = [
@@ -73,6 +77,20 @@ export default function Profile(){
             
         } catch (err) {
             console.error("Error in handleAddAddress", err);
+        } finally{
+            toast.success("Profile Updated Successfully")
+        }
+
+    };
+
+    const handleProfileUpdate = async () => {
+        if (!profileFormData.name?.trim()) return toast.error("Name is required.");
+        if (!profileFormData.email?.trim()) return toast.error("email is required.");
+        try {
+            await updateProfile(profileFormData);
+            
+        } catch (err) {
+            console.error("Error in handleProfileUpdate", err);
         }
 
     };
@@ -85,8 +103,8 @@ export default function Profile(){
 
     return(
         <main className="">
-            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[8rem] mb-10 min-h-screen ">
-                <aside>
+            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[4rem] mb-10 min-h-[85vh] px-1 ">
+                <aside className="sidebar ">
                     <div className="rounded-2xl border border-neutral-200 p-5 text-center">
                         <div className="w-20 h-20 rounded-full bg-neutral-950 text-white text-2xl font-semibold grid place-items-center mx-auto" >{first}{last}</div>
                         <h2 className="mt-3 font-semibold">{profile?.name} </h2>
@@ -94,7 +112,7 @@ export default function Profile(){
                         <span className="inline-block mt-3 text-xs border border-neutral-200 rounded-full px-3 py-1">Gold Member</span>
                     </div>
 
-                    <div className="mt-4 flex md:flex-col gap-1 overflow-x-auto justify-center">
+                    <div className="mt-4 flex flex-wrap md:flex-col gap-1 justify-center">
                         { tabs.map((t) => {
                             const Icon = t.icon
                             return(
@@ -114,7 +132,7 @@ export default function Profile(){
                 </aside>
 
                 { activeTab === "overview" && (
-                    <section className="min-w-0">
+                    <section className="min-w-0  md:h-screen overflow-y-auto">
                     <h2 className="text-2xl font-semibold mb-5">Welcome Back, {profile?.name.split(" ")[0]}</h2>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" >
                         { info.map((i) => {
@@ -122,7 +140,7 @@ export default function Profile(){
                             return(
                                 <div key={i.label} className="rounded-2xl border border-neutral-200 p-4" >
                                     <Icon className="w-5 h-4 text-neutral-400 " />
-                                    <b className="block text-2xl mt-3">{i.value} </b>
+                                    <b className="block text-xl md:text-2xl mt-3">{i.value} </b>
                                     <span className="text-xs text-neutral-500">{i.label} </span>
                                 </div>
                             )
@@ -130,30 +148,72 @@ export default function Profile(){
                     </div>
                     
                     <h3 className="font-semibold mt-8 mb-3">Latest Order</h3>
-                    { orders.slice(0,1).map(((o) => (
+                    
+                    {orders.slice(0, 1).map((o) => (
                         <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
                             <div className="flex flex-wrap justify-between gap-2 text-sm">
                                 <div>
-                                    <b>{o.order_number} </b>
-                                    <p className="text-xs text-neutral-500 mt-0.5">{formatDate(o.created_at)} · {o.order_items.length} Items</p>
+                                    <b>{o.order_number}</b>
+                                    <p className="text-xs text-neutral-500 mt-0.5">
+                                        {formatDate(o.created_at)} · {o.order_items.length} Items
+                                    </p>
                                 </div>
-                                <b>${o.total.toFixed(2)} </b>
 
-                                
-                            </div>  
-                            <div className="flex gap-2 mt-3" >
-                                { o.order_items.map((i) => (
-                                    <div  className="w-14 h-14 rounded-lg overflow-hidden " >
-                                        <img src={i.image[0]} alt="img" className="object-cover w-full h-full"/>
-                                    </div>
-                                )) }
+                                <b>${o.total.toFixed(2)}</b>
                             </div>
 
+                            <div className="flex gap-2 mt-3">
+                                {o.order_items.map((i) => (
+                                    <div
+                                        key={i.image[0]}
+                                        className="w-14 h-14 rounded-lg overflow-hidden"
+                                    >
+                                        <img
+                                            src={i.image[0]}
+                                            alt="img"
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Order progress bar */}
+                            <div className="flex gap-3 mt-4">
+                                {["processing", "shipped", "delivered"].map((status, index) => {
+                                    const statuses = ["processing", "shipped", "delivered"];
+                                    const currentIndex = statuses.indexOf(
+                                        o.status?.toLowerCase()
+                                    );
+                                    const isCompleted = index <= currentIndex;
+
+                                    return (
+                                        <div key={status} className="flex-1">
+                                            <div
+                                                className={`h-1.5 rounded-full ${
+                                                    isCompleted
+                                                        ? "bg-neutral-950"
+                                                        : "bg-neutral-200"
+                                                }`}
+                                            />
+
+                                            <p
+                                                className={`text-[11px] mt-1 font-medium ${
+                                                    isCompleted
+                                                        ? "text-neutral-950"
+                                                        : "text-neutral-400"
+                                                }`}
+                                            >
+                                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
-                    ))) }
+                    ))}
                     
                     <h3 className="font-semibold mt-8 mb-3">Recently Viewed</h3>
-                    <div className="grid grid-flow-col auto-cols-[300px] gap-6 overflow-x-auto">
+                    <div className="grid grid-flow-col auto-cols-[200px] md:auto-cols-[300px] gap-6 overflow-x-auto">
                         { recentlyViewed.map((r) =>  (
                             <ProductCard key={r.id} product={r} />
                         )) }
@@ -163,29 +223,70 @@ export default function Profile(){
                 ) }
                 
                 { activeTab === "orders" && (
-                    <section className="min-w-0">
+                    <section className="min-w-0  md:h-screen overflow-y-auto">
                         <h2 className="text-2xl font-semibold mb-5">Order History</h2>
-                        { orders.map(((o) => (
-                            <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
-                                <div className="flex flex-wrap justify-between gap-2 text-sm">
-                                    <div>
-                                        <b>{o.order_number} </b>
-                                        <p className="text-xs text-neutral-500 mt-0.5">{formatDate(o.created_at)} · {o.order_items.length} Items</p>
-                                    </div>
-                                    <b>${o.total.toFixed(2)} </b>
-
-                                    
-                                </div>  
-                                <div className="flex gap-2 mt-3" >
-                                    { o.order_items.map((i) => (
-                                        <div  className="w-14 h-14 rounded-lg overflow-hidden " >
-                                            <img src={i.image[0]} alt="img" className="object-cover w-full h-full"/>
-                                        </div>
-                                    )) }
+                        {orders.map((o) => (
+                        <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
+                            <div className="flex flex-wrap justify-between gap-2 text-sm">
+                                <div>
+                                    <b>{o.order_number}</b>
+                                    <p className="text-xs text-neutral-500 mt-0.5">
+                                        {formatDate(o.created_at)} · {o.order_items.length} Items
+                                    </p>
                                 </div>
 
+                                <b>${o.total.toFixed(2)}</b>
                             </div>
-                        ))) }
+
+                            <div className="flex gap-2 mt-3">
+                                {o.order_items.map((i) => (
+                                    <div
+                                        key={i.image[0]}
+                                        className="w-14 h-14 rounded-lg overflow-hidden"
+                                    >
+                                        <img
+                                            src={i.image[0]}
+                                            alt="img"
+                                            className="object-cover w-full h-full"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Order progress bar */}
+                            <div className="flex gap-3 mt-4">
+                                {["processing", "shipped", "delivered"].map((status, index) => {
+                                    const statuses = ["processing", "shipped", "delivered"];
+                                    const currentIndex = statuses.indexOf(
+                                        o.status?.toLowerCase()
+                                    );
+                                    const isCompleted = index <= currentIndex;
+
+                                    return (
+                                        <div key={status} className="flex-1">
+                                            <div
+                                                className={`h-1.5 rounded-full ${
+                                                    isCompleted
+                                                        ? "bg-neutral-950"
+                                                        : "bg-neutral-200"
+                                                }`}
+                                            />
+
+                                            <p
+                                                className={`text-[11px] mt-1 font-medium ${
+                                                    isCompleted
+                                                        ? "text-neutral-950"
+                                                        : "text-neutral-400"
+                                                }`}
+                                            >
+                                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
                     </section>
                 ) }
 
@@ -227,6 +328,24 @@ export default function Profile(){
                             <input name="postal_code"  placeholder="Postal Code" className="inp" value={formData.postal_code} onChange={handleChange} />
                             <button disabled={isLoading} onClick={handleAddAddress} className="btn sm:col-span-2 disabled:opacity-50 disabled:cursor-not-allowed">Save Address</button>
                         </div>
+                    </div>
+                ) }
+
+                {  activeTab === "settings" && (
+                    <div className="min-w-0" >
+                        <h2 className="text-2xl font-semibold mb-5">Account Settings</h2>
+                        <form className="rounded-2xl border border-neutral-200 p-5 grid sm:grid-cols-2 gap-3">
+                            <h3 className="font-semibold sm:col-span-2">Personal Details</h3>
+                            <input name="name" className="inp" value={profileFormData.name} onChange={handleProfileChange} />
+                            <input name="email"  className="inp" value={profileFormData.email} onChange={handleProfileChange}  />
+                            <input name="phone" placeholder="Phone Number"  className="inp sm:col-span-2" value={profileFormData.phone} onChange={handleProfileChange}  />
+                            <button onClick={handleProfileUpdate} disabled={profileLoading} className="btn sm:col-span-2 disabled:opacity-50 disabled:cursor-not-allowed">Save Changes</button>
+                        </form>
+
+                        <div className="rounded-2xl border border-red-200 p-5 mt-5">
+                            <h3 className="font-semibold text-red-600">Danger Zone</h3>
+                            <p className="text-xs text-neutral-500 mt-1">Clears your profile, orders, addresses and wishlist from this browser.</p>
+                            <button onClick={deleteAccount} className="mt-3 h-10 px-4 rounded-lg border border-red-300 text-red-600 text-sm">Delete Account</button></div>
                     </div>
                 ) }
             </section>

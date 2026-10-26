@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { supabase } from "../lib/supabase-client"
 import { useProfileStore } from "./ProfileStore";
 import toast from "react-hot-toast";
+import { useAddressStore } from "./AddresStore";
 
 // interface Order {
 //     id: string;
@@ -29,13 +30,20 @@ interface CheckoutStore {
 
 await useProfileStore.getState().fetchProfile();
 const profile = useProfileStore.getState().profile
+await useAddressStore.getState().fetchAddress();
+
+const addressList = useAddressStore.getState().addressList;
+
+const default_address = addressList?.find(
+    (a) => a.is_default === true
+);
 
 const initialFormData: FormData = {
     name: profile ? profile.name : "",
     email: profile ? profile.email : "",
-    address: '',
-    city: '',
-    postal_code: '',
+    address: default_address ? default_address.street_address : "" ,
+    city: default_address ? default_address.city : ""  ,
+    postal_code: default_address ? default_address.postal_code : ""  ,
 };
 
 export const useCheckoutStore = create <CheckoutStore>((set) => ({

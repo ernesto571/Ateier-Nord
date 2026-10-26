@@ -12,17 +12,17 @@ interface Profile {
 interface FormData {
     name: string;
     email: string;
-    phone: string;
+    phone?: string;
 }
 
 interface ProfileStore {
     profile: Profile | null;
-    formData: FormData;
+    profileFormData: FormData;
     profileLoading: boolean;
     fetchProfile: () => Promise<void>;
     updateProfile: (data: FormData) => Promise<void>;
     deleteAccount: () => Promise<void>;
-    setFormData: (data: Partial<FormData>) => void;
+    setProfileFormData: (data: Partial<FormData>) => void;
 }
 
 const initialFormData: FormData = {
@@ -34,7 +34,7 @@ const initialFormData: FormData = {
 export const useProfileStore = create<ProfileStore>((set) => ({
     profile: null,
     profileLoading: false,
-    formData: initialFormData,
+    profileFormData: initialFormData,
 
     fetchProfile: async () => {
         set({ profileLoading: true });
@@ -57,7 +57,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
 
             set({
                 profile,
-                formData: {
+                profileFormData: {
                     name: profile.name,
                     email: profile.email,
                     phone: profile.phone,
@@ -99,7 +99,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
 
             set({
                 profile,
-                formData: {
+                profileFormData: {
                     name: profile.name,
                     email: profile.email,
                     phone: profile.phone,
@@ -132,7 +132,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
 
             set({
                 profile: null,
-                formData: initialFormData,
+                profileFormData: initialFormData,
             });
 
             console.log("Account deleted successfully");
@@ -146,10 +146,10 @@ export const useProfileStore = create<ProfileStore>((set) => ({
         }
     },
 
-    setFormData: (data) =>
+    setProfileFormData: (data) =>
         set((state) => ({
-            formData: {
-                ...state.formData,
+            profileFormData: {
+                ...state.profileFormData,
                 ...data,
             },
         })),
