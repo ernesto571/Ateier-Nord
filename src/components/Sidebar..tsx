@@ -2,21 +2,33 @@ import { Footprints, Headphones, Heart, LayoutGrid, Shirt, Watch } from "lucide-
 import { NavLink } from "react-router-dom"
 import { useProductStore } from "../store/ProductStore"
 import { useWishlistStore } from "../store/Wishlist"
-import { useLayoutEffect } from "react"
 
 export default function  Sidebar () {
     const { allProducts } = useProductStore()
-    const { wishlistItems, fetchWishlistItems} = useWishlistStore()
+    const { wishlistItems} = useWishlistStore()
 
-    useLayoutEffect(() => {
-        fetchWishlistItems()
-    }, [])
+    const acc = allProducts!.filter(
+        (p) => p.category === "Accessories" 
+    )
+
+    const foot = allProducts!.filter(
+        (p) => p.category === "Footwear" 
+    )
+
+    const app = allProducts!.filter(
+        (p) => p.category === "Apparel" 
+    )
+
+    const tech = allProducts!.filter(
+        (p) => p.category === "Tech" 
+    )
+
     const categories  = [
         {icon: LayoutGrid, label:"All", length:allProducts?.length, to:"/all", end:true},
-        {icon: Shirt, label:"Apparel", length:3, to:"/apparel" },
-        {icon: Footprints, label:"Footwear", length:2, to:"/footwear" },
-        {icon: Watch, label:"Accessories", length:5, to:"/accessories"},
-        {icon: Headphones, label:"Tech", length:8, to:"/tech"},
+        {icon: Shirt, label:"Apparel", length:app.length, to:"/apparel" },
+        {icon: Footprints, label:"Footwear", length:foot.length, to:"/footwear" },
+        {icon: Watch, label:"Accessories", length:acc.length, to:"/accessories"},
+        {icon: Headphones, label:"Tech", length:tech.length, to:"/tech"},
         {icon: Heart, label:"Wishlist", length:wishlistItems.length, to:"/my-wishlist"}
     ]
 

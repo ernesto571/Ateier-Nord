@@ -29,9 +29,9 @@ interface CheckoutStore {
 }
 
 await useProfileStore.getState().fetchProfile();
-const profile = useProfileStore.getState().profile
 await useAddressStore.getState().fetchAddress();
 
+const profile = useProfileStore.getState().profile
 const addressList = useAddressStore.getState().addressList;
 
 const default_address = addressList?.find(

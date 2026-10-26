@@ -110,7 +110,7 @@ export default function Checkout () {
                         <div className="space-y-1 text-sm">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>${total}</span>
+                                <span>${total.toFixed(2)}</span>
                                 </div>
                             <div className="flex justify-between">
                                 <span>Shipping</span>

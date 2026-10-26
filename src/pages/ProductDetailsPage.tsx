@@ -35,6 +35,7 @@ export default function ProductDetails() {
     const [size, setSize] = useState("")
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState("Details")
+    const [activeImage, setActiveImage] = useState<string | null>(null)
     const [showCart, setShowCart] = useState(false)
     const {addWishlistItem, removeItem, isLoading} = useWishlistStore()
     const tabs = [
@@ -87,6 +88,10 @@ export default function ProductDetails() {
         });
     }, [product, addRecentlyViewed]);
 
+    useEffect(() => {
+        setActiveImage(product?.images?.[0] ?? null)
+    }, [product])
+
     if (!product) return null
 
 
@@ -102,7 +107,7 @@ export default function ProductDetails() {
     return (
         <div>
 
-        <main className="max-w-7xl mx-auto px-4 py-8 mt-10 md:mt-16 ">
+        <main className="max-w-7xl mx-auto px-4 py-8 mt-10  ">
             {/* heading */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-7 text-sm">
                 <button
@@ -140,8 +145,8 @@ export default function ProductDetails() {
                 <section className="flex flex-col-reverse md:flex-row-reverse lg:flex-row gap-5" >
                     <div className="grid grid-cols-3 gap-6 md:flex flex-col md:gap-3">
                         { product.images.map((i) => (
-                        <div key={i} className="h-[70px] lg:h-[120px] w-[100px] rounded-xl  border-2 p-0.5 transition border-neutral-950">
-                            <img src={i} alt="" className="w-full h-full object-cover rounded-xl" />
+                        <div key={i} className={` h-[70px] lg:h-[120px] w-[100px] rounded-xl  border-2 p-0.5 transition ${activeImage === i ? "border-neutral-950" : "border-neutral-200" }  `} >
+                            <img onClick={ () => setActiveImage(i) } src={i} alt="" className="w-full h-full object-cover rounded-xl hover:cursor-pointer " />
                         </div>
                         )) }
                         
@@ -149,12 +154,12 @@ export default function ProductDetails() {
 
                     <div className="relative h-[250px] md:h-[350px] lg:h-[600px] w-full ">
                         <p className="absolute top-4 left-4 z-40 rounded-full bg-white/90 backdrop-blur px-3 py-1.5 text-[10px] uppercase tracking-[.16em] font-semibold">considered design</p>
-                        <img src={product?.images[0]} alt="" className="relative w-full h-full object-cover rounded-3xl"/>
+                        <img src={ activeImage ?? "" } alt="" className="relative w-full h-full object-cover rounded-3xl"/>
                     </div>
                 </section>
                 
                 <section >
-                    <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mb-4"><span className="text-[10px] uppercase tracking-[.2em] text-neutral-500">{product?.category} /  {product?.subcat}</span><span className="w-1 h-1 rounded-full bg-neutral-300"></span><span className="text-[10px] uppercase tracking-[.2em] text-neutral-500">Item No. {product?.id} </span></div>
+                    <div className="flex  truncate flex-col md:flex-row md:items-center gap-1 md:gap-2 mb-4"><span className="text-[10px] uppercase tracking-[.2em] text-neutral-500">{product?.category} /  {product?.subcat}</span><span className="w-1 h-1 rounded-full bg-neutral-300"></span><span className="text-[10px] uppercase tracking-[.2em] text-neutral-500">Item No. {product?.id} </span></div>
 
                     {/*product name  */}
                     <h1 className="text-2xl md:text-3xl sm:text-4xl xl:text-[2.4rem] leading-[1.08] font-semibold tracking-tight">{product?.name} </h1>

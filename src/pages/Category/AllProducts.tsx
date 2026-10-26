@@ -2,14 +2,19 @@ import Sidebar from "../../components/Sidebar.";
 import { useProductStore } from "../../store/ProductStore";
 import ProductCard from "../../components/ProductCard";
 import Footer from "../../components/Home/Footer";
+import { useEffect } from "react";
 
 export default function AllProducts () {
 
-    const { allProducts, productsLoading } = useProductStore()
+    const { allProducts, productsLoading, fetchAllProducts } = useProductStore()
+
+    useEffect(() => {
+        fetchAllProducts()
+    }, [])
 
     return(
         <main>
-            <div  className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-y-6 md:gap-6  lg:gap-10 mt-10 md:mt-16"> 
+            <div  className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-y-6 md:gap-6  lg:gap-10 mt-10 md:mt-14"> 
 
                 <section className="sidebar ">
                     <Sidebar />

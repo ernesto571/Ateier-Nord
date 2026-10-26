@@ -18,7 +18,9 @@ import { useWishlistStore } from "./store/Wishlist";
 import { useCartStore } from "./store/CartStore";
 import { useProductStore } from "./store/ProductStore";
 import Profile from "./pages/ProfilePage";
-import AnnouncementBar from "./components/Announcement";
+import Footwear from "./pages/Category/Footwear";
+import Accessories from "./pages/Category/Accessories";
+import Tech from "./pages/Category/Tech";
 
 interface RouteProps {
   children: React.ReactNode;
@@ -72,22 +74,20 @@ function App() {
 
   return (
     <>
-      <AnnouncementBar />
       <Navbar />
 
       <main>
       <Routes>
-        {/* <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
-        <Route path="/saved-reports" element={<ProtectedRoute><SavedReport /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} /> */}
+       
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/all" element={<AllProducts />} />
         <Route path="/apparel" element={<Apparel />} />
+        <Route path="/footwear" element={<Footwear />} />
+        <Route path="/accessories" element={<Accessories />} />
+        <Route path="/tech" element={<Tech />} />
         <Route path="/my-wishlist" element={<Wishlist />} />
         <Route path="/:slug" element={<ProductDetails />} />
         <Route path="/checkout" element={<Checkout />} />
