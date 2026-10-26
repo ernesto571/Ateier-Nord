@@ -56,7 +56,7 @@ export default function Login ()  {
                     
                     <button disabled={ isLoading } onClick={handleLogin} className="btn w-full disabled:cursor-not-allowed disabled:opacity-50">Continue</button>
                 </div>
-                <button onClick={() => {navigate("/login")}} className="mt-4 text-sm underline underline-offset-4">CreateI Already Have An Account</button>
+                <button onClick={() => {navigate("/sign-up")}} className="mt-4 text-sm underline underline-offset-4">Create An Account</button>
             </div>
             <Footer/>
         </main>

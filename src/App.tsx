@@ -46,9 +46,16 @@ function App() {
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
-        (_event, session) => {
-            useAuthStore.setState({ session });
-        }
+      (_event, session) => {
+          useAuthStore.setState({ session });
+  
+          if (session) {
+              setTimeout(() => {
+                  void useCartStore.getState().migrateCartToDatabase();
+                  void useWishlistStore.getState().migrateWishlistToDatabase();
+              }, 0);
+          }
+      }
     );
 
     const initializeApp = async () => {

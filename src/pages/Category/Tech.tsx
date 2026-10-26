@@ -17,11 +17,11 @@ export default function Tech () {
 
     const [ activeCategory, setActiveCategory ] = useState("All Tech");
 
-    const tech = allProducts!.filter(
+    const tech = allProducts?.filter(
         (t) => t.category === "Tech" 
     );
 
-    const filteredTech = tech!.filter(
+    const filteredTech = tech?.filter(
         (a) => activeCategory === "All Tech" || a.subcat === activeCategory
     )
 

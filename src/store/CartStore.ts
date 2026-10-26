@@ -19,7 +19,7 @@ interface CartStore {
     addItem: (item: CartItem) => Promise<void>
     removeItem: (product_id: string, color: string, size: string) => void
     updateQuantity: (product_id: string, color: string, size: string, quantity: number) => void
-    clearCart: () => void
+    migrateCartToDatabase: () => Promise<void>;
 }
 
 const same = (a: CartItem, product_id: string, color: string, size: string) =>
@@ -167,8 +167,87 @@ export const useCartStore = create<CartStore>((set, get) => ({
         set({ items: updated })
     },
 
-    clearCart: () => {
-        localStorage.removeItem("cart")
-        set({ items: [] })
-    },
+
+    
+migrateCartToDatabase: async () => {
+  const session = useAuthStore.getState().session;
+
+  if (!session?.user) {
+      console.log("Cart migration skipped: user is not authenticated");
+      return;
+  }
+
+  const guestItems = getGuestCart();
+
+  if (guestItems.length === 0) return;
+
+  try {
+      const userId = session.user.id;
+
+      const { data: existingItems, error: fetchError } = await supabase
+          .from("cart")
+          .select("product_id, name, price, image, color, size, quantity")
+          .eq("user_id", userId);
+
+      if (fetchError) throw fetchError;
+
+      const mergedItems: CartItem[] = (existingItems ?? []).map((item) => ({
+          product_id: item.product_id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+      }));
+
+      for (const guestItem of guestItems) {
+          const existing = mergedItems.find((item) =>
+              same(
+                  item,
+                  guestItem.product_id,
+                  guestItem.color,
+                  guestItem.size
+              )
+          );
+
+          if (existing) {
+              existing.quantity += guestItem.quantity;
+          } else {
+              mergedItems.push({ ...guestItem });
+          }
+      }
+
+      const rowsToSave = mergedItems.map((item) => ({
+          user_id: userId,
+          product_id: item.product_id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+      }));
+
+      const { error: saveError } = await supabase
+          .from("cart")
+          .upsert(rowsToSave, {
+              onConflict: "user_id,product_id,color,size",
+          });
+
+      if (saveError) throw saveError;
+
+      localStorage.removeItem("cart");
+
+      await get().fetchCartItems();
+
+      console.log("Guest cart migrated successfully");
+  } catch (error) {
+      console.error("Failed to migrate guest cart:", error);
+  }
+},
+
+
+
+  
 }))

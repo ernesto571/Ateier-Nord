@@ -17,11 +17,11 @@ export default function Apparel () {
 
     const [ activeCategory, setActiveCategory ] = useState("All Apparel");
 
-    const apparel = allProducts!.filter(
+    const apparel = allProducts?.filter(
         (p) => p.category === "Apparel" 
     );
 
-    const filteredApparel = apparel!.filter(
+    const filteredApparel = apparel?.filter(
         (a) => activeCategory === "All Apparel" || a.subcat === activeCategory
     )
 

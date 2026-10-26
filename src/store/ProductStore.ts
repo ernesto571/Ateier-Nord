@@ -22,14 +22,14 @@ interface Product {
 }
 
 interface ProductStore {
-  allProducts: Product[] | null;
+  allProducts: Product[] ;
   productsLoading: boolean;
   error: string | null;
   fetchAllProducts: () => Promise<void>;
 }
 
 export const useProductStore = create<ProductStore>((set) => ({
-  allProducts: null,
+  allProducts: [],
   productsLoading: false,
   error: null,
 

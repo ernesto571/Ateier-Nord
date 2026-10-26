@@ -17,6 +17,7 @@ interface WishlistStore {
     fetchWishlistItems: () => Promise<void>
     addWishlistItem: (item: WishlistItem) => void
     removeItem: (id: string) => void
+    migrateWishlistToDatabase: () => Promise<void>;
 }
 
 export const useWishlistStore = create<WishlistStore>((set, get) => ({
@@ -117,4 +118,50 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
         await get().fetchWishlistItems()
         
     },
+
+
+    migrateWishlistToDatabase: async () => {
+        const session = useAuthStore.getState().session;
+
+        if (!session?.user) return;
+
+        const guestWishlist = localStorage.getItem("wishlist");
+
+        if (!guestWishlist) return;
+
+        try {
+            const guestItems = JSON.parse(guestWishlist);
+
+            if (!guestItems.length) {
+                localStorage.removeItem("wishlist");
+                return;
+            }
+
+            const rowsToSave = guestItems.map((item: WishlistItem) => ({
+                user_id: session.user.id,
+                product_id: item.product_id,
+                product_name: item.product_name,
+                slug: item.slug,
+                price: item.price,
+                images: item.images,
+                rating: item.rating,
+            }));
+
+            const { error } = await supabase
+                .from("wishlist")
+                .upsert(rowsToSave, {
+                    onConflict: "user_id,slug",
+                    ignoreDuplicates: true,
+                });
+
+            if (error) throw error;
+
+            localStorage.removeItem("wishlist");
+
+            await get().fetchWishlistItems();
+        } catch (error) {
+            console.error("Failed to migrate guest wishlist:", error);
+        }
+    },
+
 }))

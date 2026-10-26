@@ -17,11 +17,11 @@ export default function Accessories () {
 
     const [ activeCategory, setActiveCategory ] = useState("All");
 
-    const acc = allProducts!.filter(
+    const acc = allProducts?.filter(
         (p) => p.category === "Accessories" 
     );
 
-    const filteredAcc = acc!.filter(
+    const filteredAcc = acc?.filter(
         (a) => activeCategory === "All" || a.subcat === activeCategory
     )
 

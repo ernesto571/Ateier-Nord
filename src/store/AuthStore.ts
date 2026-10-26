@@ -71,6 +71,7 @@ export const useAuthStore = create<AuthStroe>((set) => ({
                 console.error(error.message)
                 return;
             }
+            
         } catch (err: any) {
             console.error("🔴 signIn : failed", err.message)
           } finally {

@@ -103,7 +103,7 @@ export default function Profile(){
 
     return(
         <main className="">
-            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[4rem] mb-10 min-h-[85vh] px-1 ">
+            <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[5rem] mb-10 min-h-[85vh] px-1 ">
                 <aside className="sidebar ">
                     <div className="rounded-2xl border border-neutral-200 p-5 text-center">
                         <div className="w-20 h-20 rounded-full bg-neutral-950 text-white text-2xl font-semibold grid place-items-center mx-auto" >{first}{last}</div>

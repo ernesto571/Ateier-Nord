@@ -17,11 +17,11 @@ export default function Footwear () {
 
     const [ activeCategory, setActiveCategory ] = useState("All Footwear");
 
-    const footwear = allProducts!.filter(
+    const footwear = allProducts?.filter(
         (p) => p.category === "Footwear" 
     );
 
-    const filteredFootwear = footwear!.filter(
+    const filteredFootwear = footwear?.filter(
         (f) => activeCategory === "All Footwear" || f.subcat === activeCategory
     )
 
