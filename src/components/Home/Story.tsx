@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom"
 
 export default function Story () {
+
+    const navigate = useNavigate()
 
     return (
         <main className="sect-main border-default bg-[#fafafa] ">
@@ -16,7 +19,7 @@ export default function Story () {
 
                     <div className="mt-6 grid grid-cols-3 gap-3 text-sm"><div className="rounded-xl border border-neutral-200 bg-white p-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="layers" className="lucide lucide-layers w-5 h-5 mb-3"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></svg><b className="block">More variety</b><span className="text-xs text-neutral-500">Different categories, one store</span></div><div className="rounded-xl border border-neutral-200 bg-white p-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="search" className="lucide lucide-search w-5 h-5 mb-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg><b className="block">Easy discovery</b><span className="text-xs text-neutral-500">Find your next favorite</span></div><div className="rounded-xl border border-neutral-200 bg-white p-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="shopping-bag" className="lucide lucide-shopping-bag w-5 h-5 mb-3"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg><b className="block">Simple shopping</b><span className="text-xs text-neutral-500">Your finds in one place</span></div></div>
 
-                    <button  className="btn mt-6">Get To Know The Store <span className="ml-3">↗</span></button>
+                    <button onClick={() => navigate("/all")}  className="btn mt-6">Get To Know The Store <span className="ml-3">↗</span></button>
                 </section>
             </div>
         </main>

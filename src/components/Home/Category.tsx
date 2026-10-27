@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom"
 
 export default function Category (){
+
+    const navigate = useNavigate()
     const cat = [
-        {label:"Apparel", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900&q=80"},
-        {label:"Footwear", img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=80"},
-        {label:"Accessories", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80"},
-        {label:"Tech", img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80"}
+        {label:"Apparel", to:"/apparel", img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w:900&q=80"},
+        {label:"Footwear", to:"/footwear",  img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w:900&q=80"},
+        {label:"Accessories", to:"/accessories", img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=80"},
+        {label:"Tech", to:"/tech", img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=80"}
     ]
 
     return(
@@ -13,7 +16,7 @@ export default function Category (){
 
             <div className="grid grid-cols-2 lg:grid-cols-4 mt-9 gap-3 md:gap-6">
                 { cat.map((c) => (
-                    <button key={c.label} className="relative rounded-xl border p-2 group group-hover:cursor-pointer">
+                    <button onClick={() => navigate(c.to)} key={c.label} className="relative rounded-xl border p-2 group group-hover:cursor-pointer">
                         <div className="relative group overflow-hidden rounded-lg h-[150px] md:h-[200px] lg:h-[250px] ">
                             <img
                                 src={c.img}

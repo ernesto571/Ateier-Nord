@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 
 const countdown = [
   { value: "00", label: "Days" },
@@ -11,6 +12,9 @@ const countdown = [
  * The CTA is intentionally not connected to any functionality yet.
  */
 export default function LimitedTimeOffer() {
+
+  const navigate = useNavigate()
+
   return (
     <section className=" bg-white px-4 py-8 sm:px-6 lg:px-4">
       <div className="mx-auto grid w-full max-w-7xl items-center gap-8 rounded-[24px] bg-[#0A0A0A]  py-5 md:py-10 text-white px-4 md:px-8 lg:grid-cols-[1fr_auto] md:gap-10 lg:px-12">
@@ -28,7 +32,7 @@ export default function LimitedTimeOffer() {
             Use code <span className="font-bold text-white">SAVE10</span> at checkout. Ends when the timer does.
           </p>
 
-          <button
+          <button onClick={() => navigate("/all")}
             className="mt-6 inline-flex h-8 md:h-12 items-center justify-center rounded-lg bg-white px-6 text-sm font-medium text-neutral-950 transition-colors duration-200 hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
           >
             Claim Offer &amp; Shop

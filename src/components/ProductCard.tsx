@@ -77,7 +77,7 @@ export default function ( { product }: ProductCardProps ) {
                     <h3>${product.price.toFixed(2)} </h3>
                 </span>
                 <span className="flex flex-col md:flex-row justify-between gap-2 md:items-center ">
-                    <p className="text-xs font-semibold">★ {product.rating} </p>
+                    <p className="text-xs font-semibold">★ {product.rating.toFixed(1)} </p>
                     <button onClick={addToCart} className="bg-black text-xs lg:text-sm text-white py-2 px-3 rounded-lg" >Add To Cart</button>
                 </span>
             </div>
