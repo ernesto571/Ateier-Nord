@@ -8,7 +8,7 @@ export default function Checkout () {
 
     const [activeTab, setActiveTab] = useState("shipping")
     const { items, fetchCartItems } = useCartStore()
-    const {checkout, isLoading, error, formData, setFormData, client_secret, order_number, order_total} = useCheckoutStore()
+    const {checkout, isLoading, error, formData, setFormData, client_secret, order_number, order_total, initializeFormData} = useCheckoutStore()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ [e.target.name]: e.target.value });
@@ -54,8 +54,8 @@ export default function Checkout () {
 
     useEffect(() => {
         fetchCartItems()
-    }, [])
-
+        initializeFormData()
+    }, [initializeFormData])
     
     return (
         <main>

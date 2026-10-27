@@ -61,7 +61,7 @@ export default function Profile(){
         { icon:Package, label:"Orders", value: orders?.length },
         { icon:Heart, label:"Wishlist", value: wishlistItems.length },
         { icon:Wallet, label:"Total Spent", value:`$${total.toFixed(2)}` },
-        { icon:CalendarDays, label:"Member Since", value:formatDate(profile!.created_at) }
+        { icon:CalendarDays, label:"Member Since", value:formatDate(profile?.created_at ?? "") }
     ]
 
     const handleLogout = async () => {
