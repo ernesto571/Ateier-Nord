@@ -6,13 +6,18 @@ import ProductCard from "../../components/ProductCard";
 import Sidebar from "../../components/Sidebar.";
 import { useWishlistStore } from "../../store/Wishlist";
 import { useProductStore } from "../../store/ProductStore";
+import { useEffect } from "react";
 
 export default function Wishlist() {
   const {
     wishlistItems,
     isLoading,
+    fetchWishlistItems
   } = useWishlistStore();
   const {allProducts} = useProductStore();
+  useEffect(()=> {
+    fetchWishlistItems()
+  }, [])
 
   return (
     <main>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useProfileStore } from "../store/ProfileStore"
-import { CalendarDays, Heart, LayoutGrid, LogOut, MapPin, Package, Settings, Wallet } from "lucide-react"
+import { CalendarDays, Heart, LayoutGrid, LogOut, MapPin, Package, Search, Settings, ShoppingBag, Wallet } from "lucide-react"
 import { supabase } from "../lib/supabase-client"
 import { useOrderStore } from "../store/OrderStore"
 import { useWishlistStore } from "../store/Wishlist"
@@ -9,6 +9,7 @@ import ProductCard from "../components/ProductCard"
 import Footer from "../components/Home/Footer"
 import { useAddressStore } from "../store/AddresStore"
 import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 const formatDate = (created_at: string | number) => {
     return new Date(created_at).toLocaleDateString("en-US", {
@@ -20,13 +21,20 @@ const formatDate = (created_at: string | number) => {
 
 export default function Profile(){
 
+    const navigate = useNavigate()
     const { profile, fetchProfile, profileFormData, setProfileFormData, updateProfile, deleteAccount, profileLoading } = useProfileStore()
     const {orders, fetchOrders}= useOrderStore()
     const { wishlistItems } = useWishlistStore()
     const { isLoading, formData, addressList, fetchAddress, addAddress, setDefaultAddress, deleteAddress, setFormData } = useAddressStore()
     const [activeTab, setActiveTab] = useState("overview")
-    const first = profile?.name.split(" ")[0].charAt(0)
-    const last = profile?.name.split(" ")[1].charAt(0)
+    const names = profile?.name?.trim().split(/\s+/) ?? [];
+
+    const first = names[0]?.charAt(0).toUpperCase() ?? "";
+    const last = names.length > 1
+        ? names[names.length - 1].charAt(0).toUpperCase()
+        : "";
+    
+    const initials = first + last;
 
     const total = orders.reduce((n, o) => n + o.total , 0)
 
@@ -106,7 +114,7 @@ export default function Profile(){
             <section className="grid md:grid-cols-[240px_1fr] gap-8 mt-[5rem] mb-10 min-h-[85vh] px-1 ">
                 <aside className="sidebar ">
                     <div className="rounded-2xl border border-neutral-200 p-5 text-center">
-                        <div className="w-20 h-20 rounded-full bg-neutral-950 text-white text-2xl font-semibold grid place-items-center mx-auto" >{first}{last}</div>
+                        <div className="w-20 h-20 rounded-full bg-neutral-950 text-white text-2xl font-semibold grid place-items-center mx-auto" >{initials}</div>
                         <h2 className="mt-3 font-semibold">{profile?.name} </h2>
                         <p className="text-xs text-neutral-500 break-all">{profile?.email}</p>
                         <span className="inline-block mt-3 text-xs border border-neutral-200 rounded-full px-3 py-1">Gold Member</span>
@@ -133,162 +141,239 @@ export default function Profile(){
 
                 { activeTab === "overview" && (
                     <section className="min-w-0  md:h-screen overflow-y-auto">
-                    <h2 className="text-2xl font-semibold mb-5">Welcome Back, {profile?.name.split(" ")[0]}</h2>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" >
-                        { info.map((i) => {
-                            const Icon = i.icon
-                            return(
-                                <div key={i.label} className="rounded-2xl border border-neutral-200 p-4" >
-                                    <Icon className="w-5 h-4 text-neutral-400 " />
-                                    <b className="block text-xl md:text-2xl mt-3">{i.value} </b>
-                                    <span className="text-xs text-neutral-500">{i.label} </span>
-                                </div>
-                            )
-                        }) }
-                    </div>
-                    
-                    <h3 className="font-semibold mt-8 mb-3">Latest Order</h3>
-                    
-                    {orders.slice(0, 1).map((o) => (
-                        <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
-                            <div className="flex flex-wrap justify-between gap-2 text-sm">
-                                <div>
-                                    <b>{o.order_number}</b>
-                                    <p className="text-xs text-neutral-500 mt-0.5">
-                                        {formatDate(o.created_at)} · {o.order_items.length} Items
-                                    </p>
-                                </div>
-
-                                <b>${o.total.toFixed(2)}</b>
-                            </div>
-
-                            <div className="flex gap-2 mt-3">
-                                {o.order_items.map((i) => (
-                                    <div
-                                        key={i.image[0]}
-                                        className="w-14 h-14 rounded-lg overflow-hidden"
-                                    >
-                                        <img
-                                            src={i.image[0]}
-                                            alt="img"
-                                            className="object-cover w-full h-full"
-                                        />
+                        <h2 className="text-2xl font-semibold mb-5">Welcome Back, {profile?.name.split(" ")[0]}</h2>
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" >
+                            { info.map((i) => {
+                                const Icon = i.icon
+                                return(
+                                    <div key={i.label} className="rounded-2xl border border-neutral-200 p-4" >
+                                        <Icon className="w-5 h-4 text-neutral-400 " />
+                                        <b className="block text-xl md:text-2xl mt-3">{i.value} </b>
+                                        <span className="text-xs text-neutral-500">{i.label} </span>
                                     </div>
-                                ))}
+                                )
+                            }) }
+                        </div>
+                
+                        <h3 className="font-semibold mt-8 mb-3">Latest Order</h3>
+
+                        {orders.length === 0 ? (
+                            <div className="rounded-2xl border border-neutral-200 p-8 flex flex-col items-center justify-center text-center">
+                                <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-3">
+                                    <ShoppingBag className="w-5 h-5 text-neutral-500" />
+                                </div>
+
+                                <h4 className="font-medium text-neutral-900">No orders yet</h4>
+
+                                <p className="text-sm text-neutral-500 mt-1 max-w-xs">
+                                    Your latest order will appear here once you make your first purchase.
+                                </p>
+
+                                <button
+                                    onClick={() => navigate("/all")}
+                                    className="mt-4 px-5 py-2.5 rounded-full bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 transition-colors"
+                                >
+                                    Start Shopping
+                                </button>
                             </div>
-
-                            {/* Order progress bar */}
-                            <div className="flex gap-3 mt-4">
-                                {["processing", "shipped", "delivered"].map((status, index) => {
-                                    const statuses = ["processing", "shipped", "delivered"];
-                                    const currentIndex = statuses.indexOf(
-                                        o.status?.toLowerCase()
-                                    );
-                                    const isCompleted = index <= currentIndex;
-
-                                    return (
-                                        <div key={status} className="flex-1">
-                                            <div
-                                                className={`h-1.5 rounded-full ${
-                                                    isCompleted
-                                                        ? "bg-neutral-950"
-                                                        : "bg-neutral-200"
-                                                }`}
-                                            />
-
-                                            <p
-                                                className={`text-[11px] mt-1 font-medium ${
-                                                    isCompleted
-                                                        ? "text-neutral-950"
-                                                        : "text-neutral-400"
-                                                }`}
-                                            >
-                                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                        ) : (
+                            orders.slice(0, 1).map((o) => (
+                                <div
+                                    key={o.id}
+                                    className="rounded-2xl border border-neutral-200 p-4 mb-3"
+                                >
+                                    <div className="flex flex-wrap justify-between gap-2 text-sm">
+                                        <div>
+                                            <b>{o.order_number}</b>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {formatDate(o.created_at)} · {o.order_items.length} Items
                                             </p>
                                         </div>
-                                    );
-                                })}
+
+                                        <b>${Number(o.total).toFixed(2)}</b>
+                                    </div>
+
+                                    <div className="flex gap-2 mt-3">
+                                        {o.order_items.map((i, index) => (
+                                            <div
+                                                key={`${o.id}-${index}`}
+                                                className="w-14 h-14 rounded-lg overflow-hidden"
+                                            >
+                                                <img
+                                                    src={i.image[0]}
+                                                    alt="Order item"
+                                                    className="object-cover w-full h-full"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex gap-3 mt-4">
+                                        {["processing", "shipped", "delivered"].map((status, index) => {
+                                            const statuses = ["processing", "shipped", "delivered"];
+                                            const currentIndex = statuses.indexOf(
+                                                o.status?.toLowerCase()
+                                            );
+                                            const isCompleted = index <= currentIndex;
+
+                                            return (
+                                                <div key={status} className="flex-1">
+                                                    <div
+                                                        className={`h-1.5 rounded-full ${
+                                                            isCompleted
+                                                                ? "bg-neutral-950"
+                                                                : "bg-neutral-200"
+                                                        }`}
+                                                    />
+
+                                                    <p
+                                                        className={`text-[11px] mt-1 font-medium ${
+                                                            isCompleted
+                                                                ? "text-neutral-950"
+                                                                : "text-neutral-400"
+                                                        }`}
+                                                    >
+                                                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+
+                        <h3 className="font-semibold mt-8 mb-3">Recently Viewed</h3>
+
+                        {recentlyViewed.length === 0 ? (
+                            <div className="rounded-2xl border border-neutral-200 p-8 flex flex-col items-center justify-center text-center">
+                                <div className="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center mb-3">
+                                    <Search className="w-5 h-5 text-neutral-500" />
+                                </div>
+
+                                <h4 className="font-medium text-neutral-900">
+                                    Nothing here yet
+                                </h4>
+
+                                <p className="text-sm text-neutral-500 mt-1 max-w-xs">
+                                    Products you explore will show up here, so you can find them again easily.
+                                </p>
+
+                                <button
+                                    onClick={() => navigate("/all")}
+                                    className="mt-4 px-5 py-2.5 rounded-full bg-neutral-950 text-white text-sm font-medium hover:bg-neutral-800 transition-colors"
+                                >
+                                    Explore Products
+                                </button>
                             </div>
-                        </div>
-                    ))}
-                    
-                    <h3 className="font-semibold mt-8 mb-3">Recently Viewed</h3>
-                    <div className="grid grid-flow-col auto-cols-[200px] md:auto-cols-[300px] gap-6 overflow-x-auto">
-                        { recentlyViewed.map((r) =>  (
-                            <ProductCard key={r.id} product={r} />
-                        )) }
-                    </div>
-                    
+                        ) : (
+                            <div className="grid grid-flow-col auto-cols-[200px] md:auto-cols-[300px] gap-6 overflow-x-auto">
+                                {recentlyViewed.map((r) => (
+                                    <ProductCard key={r.id} product={r} />
+                                ))}
+                            </div>
+                        )}                    
                     </section> 
                 ) }
                 
-                { activeTab === "orders" && (
-                    <section className="min-w-0  md:h-screen overflow-y-auto">
+                {activeTab === "orders" && (
+                    <section className="min-w-0 md:h-screen overflow-y-auto">
                         <h2 className="text-2xl font-semibold mb-5">Order History</h2>
-                        {orders.map((o) => (
-                        <div key={o.id} className="rounded-2xl border border-neutral-200 p-4 mb-3">
-                            <div className="flex flex-wrap justify-between gap-2 text-sm">
-                                <div>
-                                    <b>{o.order_number}</b>
-                                    <p className="text-xs text-neutral-500 mt-0.5">
-                                        {formatDate(o.created_at)} · {o.order_items.length} Items
-                                    </p>
+
+                        {orders.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center text-center py-20 px-6 border border-neutral-200 rounded-2xl">
+                                <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-5">
+                                    <ShoppingBag
+                                        size={28}
+                                        strokeWidth={1.5}
+                                        className="text-neutral-500"
+                                    />
                                 </div>
 
-                                <b>${o.total.toFixed(2)}</b>
+                                <h3 className="text-lg font-semibold text-neutral-950">
+                                    No orders yet
+                                </h3>
+
+                                <p className="text-sm text-neutral-500 mt-2 max-w-sm">
+                                    You haven't placed any orders yet. Explore our collection
+                                    and find something you'll love.
+                                </p>
+
+                                <button
+                                    onClick={() => navigate("/all")}
+                                    className="mt-6 px-6 py-3 bg-neutral-950 text-white text-sm font-medium rounded-full hover:bg-neutral-800 transition-colors"
+                                >
+                                    Start Shopping
+                                </button>
                             </div>
-
-                            <div className="flex gap-2 mt-3">
-                                {o.order_items.map((i) => (
-                                    <div
-                                        key={i.image[0]}
-                                        className="w-14 h-14 rounded-lg overflow-hidden"
-                                    >
-                                        <img
-                                            src={i.image[0]}
-                                            alt="img"
-                                            className="object-cover w-full h-full"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Order progress bar */}
-                            <div className="flex gap-3 mt-4">
-                                {["processing", "shipped", "delivered"].map((status, index) => {
-                                    const statuses = ["processing", "shipped", "delivered"];
-                                    const currentIndex = statuses.indexOf(
-                                        o.status?.toLowerCase()
-                                    );
-                                    const isCompleted = index <= currentIndex;
-
-                                    return (
-                                        <div key={status} className="flex-1">
-                                            <div
-                                                className={`h-1.5 rounded-full ${
-                                                    isCompleted
-                                                        ? "bg-neutral-950"
-                                                        : "bg-neutral-200"
-                                                }`}
-                                            />
-
-                                            <p
-                                                className={`text-[11px] mt-1 font-medium ${
-                                                    isCompleted
-                                                        ? "text-neutral-950"
-                                                        : "text-neutral-400"
-                                                }`}
-                                            >
-                                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                        ) : (
+                            orders.map((o) => (
+                                <div
+                                    key={o.id}
+                                    className="rounded-2xl border border-neutral-200 p-4 mb-3"
+                                >
+                                    <div className="flex flex-wrap justify-between gap-2 text-sm">
+                                        <div>
+                                            <b>{o.order_number}</b>
+                                            <p className="text-xs text-neutral-500 mt-0.5">
+                                                {formatDate(o.created_at)} · {o.order_items.length} Items
                                             </p>
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    ))}
+
+                                        <b>${Number(o.total).toFixed(2)}</b>
+                                    </div>
+
+                                    <div className="flex gap-2 mt-3">
+                                        {o.order_items.map((i, index) => (
+                                            <div
+                                                key={`${o.id}-${index}`}
+                                                className="w-14 h-14 rounded-lg overflow-hidden"
+                                            >
+                                                <img
+                                                    src={i.image[0]}
+                                                    alt="Order item"
+                                                    className="object-cover w-full h-full"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex gap-3 mt-4">
+                                        {["processing", "shipped", "delivered"].map((status, index) => {
+                                            const statuses = ["processing", "shipped", "delivered"];
+                                            const currentIndex = statuses.indexOf(
+                                                o.status?.toLowerCase()
+                                            );
+                                            const isCompleted = index <= currentIndex;
+
+                                            return (
+                                                <div key={status} className="flex-1">
+                                                    <div
+                                                        className={`h-1.5 rounded-full ${
+                                                            isCompleted
+                                                                ? "bg-neutral-950"
+                                                                : "bg-neutral-200"
+                                                        }`}
+                                                    />
+
+                                                    <p
+                                                        className={`text-[11px] mt-1 font-medium ${
+                                                            isCompleted
+                                                                ? "text-neutral-950"
+                                                                : "text-neutral-400"
+                                                        }`}
+                                                    >
+                                                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </section>
-                ) }
+                )}
 
                 { activeTab === "addresses" && (
                     <div className="min-w-0" >

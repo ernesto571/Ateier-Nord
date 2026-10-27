@@ -119,26 +119,36 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
         
     },
 
-
     migrateWishlistToDatabase: async () => {
         const session = useAuthStore.getState().session;
-
-        if (!session?.user) return;
-
+    
+        if (!session?.user) {
+            console.log("Wishlist migration skipped: user is not authenticated");
+            return;
+        }
+    
         const guestWishlist = localStorage.getItem("wishlist");
-
+    
         if (!guestWishlist) return;
-
+    
         try {
-            const guestItems = JSON.parse(guestWishlist);
-
-            if (!guestItems.length) {
+            const guestItems: WishlistItem[] = JSON.parse(guestWishlist);
+    
+            if (guestItems.length === 0) {
                 localStorage.removeItem("wishlist");
                 return;
             }
-
-            const rowsToSave = guestItems.map((item: WishlistItem) => ({
-                user_id: session.user.id,
+    
+            const userId = session.user.id;
+    
+            const { data: existingItems, error: fetchError } = await supabase
+                .from("wishlist")
+                .select("product_id, product_name, slug, price, images, rating")
+                .eq("user_id", userId);
+    
+            if (fetchError) throw fetchError;
+    
+            const mergedItems: WishlistItem[] = (existingItems ?? []).map((item) => ({
                 product_id: item.product_id,
                 product_name: item.product_name,
                 slug: item.slug,
@@ -146,19 +156,41 @@ export const useWishlistStore = create<WishlistStore>((set, get) => ({
                 images: item.images,
                 rating: item.rating,
             }));
-
-            const { error } = await supabase
+    
+            for (const guestItem of guestItems) {
+                const exists = mergedItems.some(
+                    (item) => item.slug === guestItem.slug
+                );
+    
+                if (!exists) {
+                    mergedItems.push(guestItem);
+                }
+            }
+    
+            const rowsToSave = mergedItems.map((item) => ({
+                user_id: userId,
+                product_id: item.product_id,
+                product_name: item.product_name,
+                slug: item.slug,
+                price: item.price,
+                images: item.images,
+                rating: item.rating,
+            }));
+    
+            const { error: saveError } = await supabase
                 .from("wishlist")
                 .upsert(rowsToSave, {
                     onConflict: "user_id,slug",
                     ignoreDuplicates: true,
                 });
-
-            if (error) throw error;
-
+    
+            if (saveError) throw saveError;
+    
             localStorage.removeItem("wishlist");
-
+    
             await get().fetchWishlistItems();
+    
+            console.log("Guest wishlist migrated successfully");
         } catch (error) {
             console.error("Failed to migrate guest wishlist:", error);
         }
